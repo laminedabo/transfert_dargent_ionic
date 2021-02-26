@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\AgenceRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\AgenceRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
  */
 class Agence
@@ -16,51 +20,67 @@ class Agence
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"compte_details"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="agence address is required")
+     * @Groups({"compte_details"})
      */
     private $adresse;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Regex(
+     *     pattern="/((\+221|00221)?)((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
+     *     match=true,
+     *     message="Invalid phone number(Ex. 771234567)"
+     * )
+     * @Assert\NotBlank(message="agence number is required")
+     * @Groups({"compte_details"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"compte_details"})
      */
     private $lattitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"compte_details"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
+     * @Groups({"compte_details"})
      */
     private $statut="actif";
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="agences")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="agences", cascade={"persist"})
+     * @Assert\NotBlank(message="error. choose or create an admin")
      */
     private $admins;
 
     /**
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence")
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence", cascade={"persist"})
      */
     private $utilisateurs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="agence", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="agence", orphanRemoval=true, cascade={"persist"})
      */
     private $comptes;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"compte_details"})
      */
     private $nom;
 
@@ -232,7 +252,7 @@ class Agence
         return $this;
     }
 
-    public function __toString(): string{
-        return $this->nom.' '.$this->adresse;
-    }
+    // public function __toString(): string{
+    //     return $this->nom.' '.$this->adresse;
+    // }
 }

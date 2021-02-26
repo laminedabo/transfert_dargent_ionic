@@ -2,13 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Agence;
+use App\Entity\Transaction;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @UniqueEntity({"username","telephone"})
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
@@ -29,11 +36,13 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="empty password")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="empty username")
      */
     private $username;
 
@@ -49,6 +58,12 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\Regex(
+     *     pattern="/((\+221|00221)?)((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
+     *     match=true,
+     *     message="Invalid phone number(Ex. 771234567)"
+     * )
+     * @Assert\NotBlank(message="empty phone number")
      */
     private $telephone;
 
@@ -290,8 +305,8 @@ class User implements UserInterface
         return $this;
     }
 
-    public function __toString(): string{
-        return $this->prenom?$this->prenom.' '.$this->nom:$this->telephone;
-    }
+    // public function __toString(): string{
+    //     return $this->prenom?$this->prenom.' '.$this->nom:$this->telephone;
+    // }
 
 }

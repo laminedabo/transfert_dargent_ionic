@@ -2,43 +2,137 @@
 
 namespace App\Entity;
 
-use App\Repository\TransactionRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Services\TransactionCode;
+use App\Repository\TransactionRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
+ * @ApiResource(
+ *    attributes={
+ *          "denormalization_context"={"groups"={"transaction_write"},"enable_max_depth"=true}
+ *      },
+ *     collectionOperations={
+ *         "depot"={
+ *              "method"="POST",
+ *              "path"="/user/comptes/{id}/depot",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "retrait"={
+ *              "method"="POST",
+ *              "path"="/user/comptes/{id}/retrait/{code}",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *         "getByCode"={
+ *              "method"="GET",
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *              "path"="/user/transaction/{code}",
+ *          },
+ *          "calcul_frais"={
+ *                  "method"="GET",
+ *                  "path"="/user/{montant}/frais",
+ *                  "security"="is_granted('ROLE_UTILISATEUR')", 
+ *                  "security_message"="permission denied.",
+ *          },
+ *          "user_client_nci"={
+ *              "method"="GET",
+ *              "path"="/user/client/{nci}",
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "user_agence_compte"={
+ *              "method"="GET",
+ *              "path"="/user/{id}/agence/compte",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "user_compte_transactions"={
+ *              "method"="GET",
+ *              "path"="/user/{id}/comptes/{idc}/transactions",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          }, 
+ *          "admin_compte_transactions"={
+ *              "method"="GET",
+ *              "path"="/admin/{id}/comptes/{idc}/transactions",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *     },
+ *     
+ *     itemOperations={
+ *          "rechargement"={
+ *              "method"="PATCH",
+ *              "path"="/caissier/comptes/{id}/recharge",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_CAISSIER')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "get"={
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="Vous n'avez pas ces privileges.",
+ *              "path"="admin/transactions/{id}",
+ *          },
+ *     },
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "senderName":"exact", "sender.id":"exact"})
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
  */
-class Transaction
+class Transaction extends TransactionCode
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"compte_details"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"compte_details"})
      */
     private $code;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="amount is required")
+     * @Assert\Type(
+     *     type="numeric",
+     *     message="value not valid."
+     * )
+     * @Groups({"transaction_write"})
+     * @Groups({"compte_details"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"compte_details"})
      */
     private $sendAt;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"compte_details"})
      */
     private $retiredAt;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"compte_details"})
      */
     private $frais;
 
@@ -68,55 +162,44 @@ class Transaction
     private $etat="not completed";
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $senderName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $senderLastName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $senderNumber;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $senderIdCard;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $receiverName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $receiverLastName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $receiverNumber;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $receiverIdCard;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions", cascade={"persist"})
+     * 
+     * l'utilisateur qui réalise l'envoi
      */
     private $sender;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions")
+     * 
+     * l'utilisateur qui réalise le retrait
      */
     private $withdrawer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="receiver is required")
+     * @Groups({"transaction_write"})
+     */
+    private $sendFrom;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank(message="sender is required")
+     * @Groups({"transaction_write"})
+     */
+    private $sendTo;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="transactions", cascade={"persist"})
+     */
+    private $compte;
+
+    public function __construct(){
+        $this->sendAt = new \DateTime();
+        $this->code = $this->generatedCode();
+    }
 
     public function getId(): ?int
     {
@@ -135,12 +218,12 @@ class Transaction
         return $this;
     }
 
-    public function getMontant(): ?int
+    public function getMontant(): ?float
     {
         return $this->montant;
     }
 
-    public function setMontant(int $montant): self
+    public function setMontant(float $montant): self
     {
         $this->montant = $montant;
 
@@ -243,102 +326,6 @@ class Transaction
         return $this;
     }
 
-    public function getSenderName(): ?string
-    {
-        return $this->senderName;
-    }
-
-    public function setSenderName(?string $senderName): self
-    {
-        $this->senderName = $senderName;
-
-        return $this;
-    }
-
-    public function getSenderLastName(): ?string
-    {
-        return $this->senderLastName;
-    }
-
-    public function setSenderLastName(?string $senderLastName): self
-    {
-        $this->senderLastName = $senderLastName;
-
-        return $this;
-    }
-
-    public function getSenderNumber(): ?string
-    {
-        return $this->senderNumber;
-    }
-
-    public function setSenderNumber(string $senderNumber): self
-    {
-        $this->senderNumber = $senderNumber;
-
-        return $this;
-    }
-
-    public function getSenderIdCard(): ?string
-    {
-        return $this->senderIdCard;
-    }
-
-    public function setSenderIdCard(string $senderIdCard): self
-    {
-        $this->senderIdCard = $senderIdCard;
-
-        return $this;
-    }
-
-    public function getReceiverName(): ?string
-    {
-        return $this->receiverName;
-    }
-
-    public function setReceiverName(string $receiverName): self
-    {
-        $this->receiverName = $receiverName;
-
-        return $this;
-    }
-
-    public function getReceiverLastName(): ?string
-    {
-        return $this->receiverLastName;
-    }
-
-    public function setReceiverLastName(?string $receiverLastName): self
-    {
-        $this->receiverLastName = $receiverLastName;
-
-        return $this;
-    }
-
-    public function getReceiverNumber(): ?string
-    {
-        return $this->receiverNumber;
-    }
-
-    public function setReceiverNumber(string $receiverNumber): self
-    {
-        $this->receiverNumber = $receiverNumber;
-
-        return $this;
-    }
-
-    public function getReceiverIdCard(): ?string
-    {
-        return $this->receiverIdCard;
-    }
-
-    public function setReceiverIdCard(string $receiverIdCard): self
-    {
-        $this->receiverIdCard = $receiverIdCard;
-
-        return $this;
-    }
-
     public function getSender(): ?User
     {
         return $this->sender;
@@ -359,6 +346,42 @@ class Transaction
     public function setWithdrawer(?User $withdrawer): self
     {
         $this->withdrawer = $withdrawer;
+
+        return $this;
+    }
+
+    public function getSendFrom(): ?Client
+    {
+        return $this->sendFrom;
+    }
+
+    public function setSendFrom(?Client $sendFrom): self
+    {
+        $this->sendFrom = $sendFrom;
+
+        return $this;
+    }
+
+    public function getSendTo(): ?Client
+    {
+        return $this->sendTo;
+    }
+
+    public function setSendTo(?Client $sendTo): self
+    {
+        $this->sendTo = $sendTo;
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
 
         return $this;
     }
