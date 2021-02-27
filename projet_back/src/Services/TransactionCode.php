@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use Osms\Osms;
+
 class TransactionCode{
     public function generatedCode(): string{
         return $this->random().'-'.$this->random().'-'.$this->random();
@@ -63,5 +65,51 @@ class TransactionCode{
         $partAgence = ($frais/100)*30;
         
         return  array('frais' => $frais, 'etat' => $partEtat, 'systeme' =>$partSystem, 'agence' =>$partAgence );
+    }
+
+    public function envoiArgentSMS($receiverNumber, $sender, $montant, $code){
+        $config = array(
+            'clientId' => 'your_client_id',
+            'clientSecret' => 'your_client_secret'
+        );
+        
+        $osms = new Osms($config);
+        
+        // retrieve an access token
+        $response = $osms->getTokenFromConsumerKey();
+        
+        if (!empty($response['access_token'])) {
+            $senderAddress = 'tel:+22100000000';
+            $receiverAddress = 'tel:+221'.$receiverNumber;
+            $message = 'Bonjour. '.$sender.' vous a envoyés '.$montant.'f. via SA transfert d\'argent. Code de retrait: '.$code;
+            $senderName = 'SA transfert d\'argent';
+        
+            $osms->sendSMS($senderAddress, $receiverAddress, $message, $senderName);
+        } else {
+            // error
+        }
+    }
+
+    public function retraitArgentSMS($receiverNumber, $beneficiaire, $montant){
+        $config = array(
+            'clientId' => 'your_client_id',
+            'clientSecret' => 'your_client_secret'
+        );
+        
+        $osms = new Osms($config);
+        
+        // retrieve an access token
+        $response = $osms->getTokenFromConsumerKey();
+        
+        if (!empty($response['access_token'])) {
+            $senderAddress = 'tel:+22100000000';
+            $receiverAddress = 'tel:+221'.$receiverNumber;
+            $message = 'Bonjour. Les '.$montant.'f envoyés à '.$beneficiaire.' viennent d\'être retirés. Merci et à bientôt';
+            $senderName = 'SA transfert d\'argent';
+        
+            $osms->sendSMS($senderAddress, $receiverAddress, $message, $senderName);
+        } else {
+            // error
+        }
     }
 }

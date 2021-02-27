@@ -54,6 +54,12 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },
+ *          "user_client_phone"={
+ *              "method"="GET",
+ *              "path"="/user/client/{phone}",
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
  *          "user_agence_compte"={
  *              "method"="GET",
  *              "path"="/user/{id}/agence/compte",
@@ -72,7 +78,42 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "method"="GET",
  *              "path"="/admin/{id}/comptes/{idc}/transactions",
  *              "requirements"={"id"="\d+"},
- *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "compte_mes_depots"={
+ *              "method"="GET",
+ *              "path"="/admin/{id}/comptes/{idc}/transactions",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "compte_mes_retraits"={
+ *              "method"="GET",
+ *              "path"="/admin/{id}/comptes/{idc}/transactions",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "compte_all_transactions"={
+ *              "method"="GET",
+ *              "path"="/admin/comptes/{id}/transactions",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "compte_all_depots"={
+ *              "method"="GET",
+ *              "path"="/admin/comptes/{id}/alldepots",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security_message"="permission denied.",
+ *          },
+ *          "compte_all_retraits"={
+ *              "method"="GET",
+ *              "path"="/admin/comptes/{id}/allretraits",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
  *              "security_message"="permission denied.",
  *          },
  *     },
@@ -176,7 +217,7 @@ class Transaction extends TransactionCode
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(message="receiver is required")
+     * @Assert\NotBlank(message="sender is required")
      * @Groups({"transaction_write"})
      */
     private $sendFrom;
@@ -184,7 +225,7 @@ class Transaction extends TransactionCode
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(message="sender is required")
+     * @Assert\NotBlank(message="receiver is required")
      * @Groups({"transaction_write"})
      */
     private $sendTo;

@@ -51,7 +51,6 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
-        // Retrieve the blog post collection from somewhere
         if($operationName==='getByCode'){
             if (!$tr = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'))) {
                 yield 'infos'=>'code invalide ou introuvable';
@@ -63,6 +62,38 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
             $idUser = $this->_request->attributes->get('id');
             $idCmpte = $this->_request->attributes->get('idc');
             $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
+            yield $trans;
+        }
+
+        if ($operationName==="compte_mes_depots") {
+            $idUser = $this->_request->attributes->get('id');
+            $idCmpte = $this->_request->attributes->get('idc');
+            $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
+            yield $trans;
+        }
+
+        if ($operationName==="compte_mes_retraits") {
+            $idUser = $this->_request->attributes->get('id');
+            $idCmpte = $this->_request->attributes->get('idc');
+            $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
+            yield $trans;
+        }
+
+        if ($operationName==="compte_all_transactions") {
+            $idCmpte = $this->_request->attributes->get('id');
+            $trans = $this->_transact_repo->findCompteAll($idCmpte);
+            yield $trans;
+        }
+
+        if ($operationName==="compte_all_retraits") {
+            $idCmpte = $this->_request->attributes->get('id');
+            $trans = $this->_transact_repo->findCompteAllRetrait($idCmpte);
+            yield $trans;
+        }
+
+        if ($operationName==="compte_all_depots") {
+            $idCmpte = $this->_request->attributes->get('id');
+            $trans = $this->_transact_repo->findCompteAllDepot($idCmpte);
             yield $trans;
         }
 
@@ -85,6 +116,10 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
 
         if($operationName==='user_client_nci'){
             yield $this->_client_repo->findOneByIdCard($this->_request->attributes->get('nci'));
+        }
+
+        if($operationName==='user_client_phone'){
+            yield $this->_client_repo->findOneByPhone($this->_request->attributes->get('phone'));
         }
         // yield new Transaction(2);
     }

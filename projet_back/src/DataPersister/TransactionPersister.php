@@ -70,7 +70,6 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
 
-        // if it's a POST request
         /**
          * Depot
          */
@@ -99,7 +98,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             if ($from = $this->_client_repo->findOneByIdCard($data->getSendFrom()->getIdCard())) {
                 $data->setSendFrom($from);
             }
-            if ($to = $this->_client_repo->findOneByIdCard($data->getSendTo()->getIdCard())) {
+            if ($to = $this->_client_repo->findOneByPhone($data->getSendTo()->getTelephone())) {
                 $data->setSendTo($to);
             }
         }
@@ -126,11 +125,9 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             if (!$this->_request->attributes->get('id') || !$compteRetrait = $this->_transact_repo->find($this->_request->attributes->get('id'))) {
                 return new JsonResponse(['infos'=>'compte introuvable']);
             }
-            if (($data->getMontant())>$compteRetrait->getSolde()) {
-                return new JsonResponse(['infos'=>'le solde du compte est insuffisant pour cette transaction']);
-            }
+
             
-            $compteRetrait->setSolde($compteRetrait->getSolde()-$data->getMontant());
+            $compteRetrait->setSolde($data->getMontant());
             $data->setCompteRetrait($compteRetrait);
         }
         

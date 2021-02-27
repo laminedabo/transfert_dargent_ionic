@@ -57,6 +57,73 @@ class TransactionRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function findCompteAll($idCmpte){
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.compte','ct')
+            ->leftJoin('t.compteRetrait','ctr')
+            ->andWhere('ct.id = :val')
+            ->orWhere('ctr.id = :val')
+            ->setParameter('val', $idCmpte)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findCompteDepot($uid, $cid){
+        return $this->createQueryBuilder('t')
+        ->leftJoin('t.compte','ct')
+        ->andWhere('ct.id = :val')
+        ->setParameter('val', $cid)
+        ->leftJoin('t.sender','sd')
+        ->andWhere('sd.id = :uid')
+        ->leftJoin('t.withdrawer','wd')
+        ->orWhere('wd.id = :uid')
+        ->setParameter('uid', $uid)
+        ->orderBy('t.id', 'ASC')
+        ->getQuery()
+        ->getResult()
+        ;
+    }
+
+    public function findCompteRetrait($idCmpte){
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.compteRetrait','ctr')
+            ->andWhere('ctr.id = :val')
+            ->setParameter('val', $cid)
+            ->leftJoin('t.sender','sd')
+            ->andWhere('sd.id = :uid')
+            ->leftJoin('t.withdrawer','wd')
+            ->orWhere('wd.id = :uid')
+            ->setParameter('uid', $uid)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findCompteAllDepot($idCmpte){
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.compte','ct')
+            ->andWhere('ct.id = :val')
+            ->setParameter('val', $idCmpte)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findCompteAllRetrait($idCmpte){
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.compteRetrait','ctr')
+            ->orWhere('ctr.id = :val')
+            ->setParameter('val', $idCmpte)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
     
 
     /*

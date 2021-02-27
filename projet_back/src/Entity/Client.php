@@ -44,7 +44,7 @@ class Client
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Regex(
-     *     pattern="/((\+221|00221)?)((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
+     *     pattern="/((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
      *     match=true,
      *     message="Invalid phone number(Ex. 771234567)"
      * )
@@ -55,8 +55,6 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="id card number cannot be empty")
-     * @Assert\NotNull(message="id card number cannot be null")
      * @Groups({"transaction_write"})
      */
     private $IdCard;

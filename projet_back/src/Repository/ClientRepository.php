@@ -58,5 +58,15 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
+
+    public function findOneByPhone($value): ?Client
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.telephone = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     
 }
