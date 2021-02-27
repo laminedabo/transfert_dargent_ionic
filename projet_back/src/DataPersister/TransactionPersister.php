@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\TransactionRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
@@ -75,7 +76,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
          */
         if ($this->_request->getMethod() === 'POST' && preg_match( '/depot/' , $this->_request->getPathInfo())) {
             $accountId = $this->_request->attributes->get('id');
-            if (!$account = $this->_compte_repo->find($accountId)) {
+            if (!$accountId || !$account = $this->_compte_repo->find($accountId)) {
                 return new JsonResponse(['infos'=>'compte introuvable']);
             }
             if (($data->getMontant())>$account->getSolde()) {
@@ -107,7 +108,14 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
          * Retrait
          */
         if (preg_match( '/retrait/' , $this->_request->getPathInfo())) {
-            $data = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'));
+            if (!$data = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'))) {
+                return new JsonResponse(['infos'=>'Ce code est invalide']);
+                // return new Response(
+                //     'Ce code est invalide',
+                //     Response::HTTP_NOT_FOUND,
+                //     ['content-type' => 'text/plain']
+                // );
+            }
             if ($data->GetWithdrawer()!==null) {
                 return new JsonResponse(['infos'=>'Cette transaction est déjà validée']);
             }
@@ -115,9 +123,18 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             $data->setWithdrawer($user);
             $data->setEtat('OK');
             $data->setRetiredAt(new \DateTime());
+            if (!$this->_request->attributes->get('id') || !$compteRetrait = $this->_transact_repo->find($this->_request->attributes->get('id'))) {
+                return new JsonResponse(['infos'=>'compte introuvable']);
+            }
+            if (($data->getMontant())>$compteRetrait->getSolde()) {
+                return new JsonResponse(['infos'=>'le solde du compte est insuffisant pour cette transaction']);
+            }
+            
+            $compteRetrait->setSolde($compteRetrait->getSolde()-$data->getMontant());
+            $data->setCompteRetrait($compteRetrait);
         }
         
-        // dd($data);
+        dd($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
         return $data;

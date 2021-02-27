@@ -17,6 +17,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "denormalization_context"={"groups"={"transaction_write"},"enable_max_depth"=true}
  *      },
  *     collectionOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *              "path"="admin/transactions",
+ *          },
  *         "depot"={
  *              "method"="POST",
  *              "path"="/user/comptes/{id}/depot",
@@ -73,13 +78,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *     },
  *     
  *     itemOperations={
- *          "rechargement"={
- *              "method"="PATCH",
- *              "path"="/caissier/comptes/{id}/recharge",
- *              "requirements"={"id"="\d+"},
- *              "security"="is_granted('ROLE_CAISSIER')", 
- *              "security_message"="permission denied.",
- *          },
  *          "get"={
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="Vous n'avez pas ces privileges.",
@@ -196,6 +194,11 @@ class Transaction extends TransactionCode
      */
     private $compte;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Compte::class, inversedBy="retraits", cascade={"persist"})
+     */
+    private $compteRetrait;
+
     public function __construct(){
         $this->sendAt = new \DateTime();
         $this->code = $this->generatedCode();
@@ -220,7 +223,7 @@ class Transaction extends TransactionCode
 
     public function getMontant(): ?float
     {
-        return $this->montant;
+        return abs($this->montant);
     }
 
     public function setMontant(float $montant): self
@@ -382,6 +385,18 @@ class Transaction extends TransactionCode
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;
+
+        return $this;
+    }
+
+    public function getCompteRetrait(): ?Compte
+    {
+        return $this->compteRetrait;
+    }
+
+    public function setCompteRetrait(?Compte $compteRetrait): self
+    {
+        $this->compteRetrait = $compteRetrait;
 
         return $this;
     }

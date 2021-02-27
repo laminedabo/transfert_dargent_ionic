@@ -14,6 +14,7 @@ class TransactionCode{
 
     public function frais($montant): array{
         $frais=0;
+        $montant = abs($montant);
         if($montant>0 && $montant <=5000){
             $frais = 425;
         }

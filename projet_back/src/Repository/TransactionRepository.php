@@ -36,6 +36,29 @@ class TransactionRepository extends ServiceEntityRepository
     }
     */
 
+     /**
+      * @return Transaction[] Returns an array of Transaction objects
+      */
+    public function findByUserAndCompte($uid, $cid)
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.compte','ct')
+            ->leftJoin('t.compteRetrait','ctr')
+            ->andWhere('ct.id = :val')
+            ->orWhere('ctr.id = :val')
+            ->setParameter('val', $cid)
+            ->leftJoin('t.sender','sd')
+            ->andWhere('sd.id = :uid')
+            ->leftJoin('t.withdrawer','wd')
+            ->orWhere('wd.id = :uid')
+            ->setParameter('uid', $uid)
+            ->orderBy('t.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
+
     /*
     public function findOneBySomeField($value): ?Transaction
     {

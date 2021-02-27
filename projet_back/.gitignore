@@ -15,4 +15,5 @@ dev.log
 ###< lexik/jwt-authentication-bundle ###
 
 .history
+.history/*
 ~/root/*

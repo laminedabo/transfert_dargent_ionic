@@ -29,6 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "requirements"={"id"="\d+"},
  *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
  *              "security_message"="permission denied.",
+ *              "denormalization_context"={"groups"={"compte_statut"}},
  *         },
  *          "get"={
  *              "path"="/admin/comptes/{id}",
@@ -36,6 +37,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "normalization_context"={"groups"={"compte_details"},"enable_max_depth"=true},
  *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
  *              "security_message"="permission denied.",
+ *          },
+ *          "rechargement"={
+ *              "method"="PUT",
+ *              "path"="/caissier/comptes/{id}/recharge",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_CAISSIER')", 
+ *              "security_message"="permission denied.",
+ *              "denormalization_context"={"groups"={"compte_recharge"}},
  *          },
  *      }
  * )
@@ -65,19 +74,25 @@ class Compte
     private $createdAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float", length=255)
      * @Assert\NotBlank(message="sold is required")
-     *  @Assert\Range(
-     *      min = 700000,
-     *      minMessage="initial sold must be at least 700.000CFA"
+     *  @Assert\Expression(
+     *     "this.getId() !== null",
+     *     message="A l'ouverture, le solde doit atteindre au moins 700.000CFA!"
      * )
-     * @Groups({"compte_details"})
+     * @Assert\Positive(message="le solde ne peut pas etre negatif")
+     * @Assert\Type(
+     *     type="numeric",
+     *     message="sold not valid."
+     * )
+     *
+     * @Groups({"compte_details","compte_recharge"})
      */
     private $solde;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","compte_statut"})
      */
     private $statut="actif";
 
@@ -92,13 +107,21 @@ class Compte
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte")
      * @Groups({"compte_details"})
+     * 
+     * Dépot
      */
     private $transactions;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compteRetrait")
+     */
+    private $retraits;
 
     public function __construct(){
         $this->createdAt = new \DateTime();
         $this->numero = substr(str_shuffle(str_repeat($x='0123456789ABC', ceil(6/strlen($x)) )),1,6);
         $this->transactions = new ArrayCollection();
+        $this->retraits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -130,14 +153,14 @@ class Compte
         return $this;
     }
 
-    public function getSolde(): ?string
+    public function getSolde(): ?float
     {
         return $this->solde;
     }
 
-    public function setSolde(string $solde): self
+    public function setSolde(float $solde): self
     {
-        $this->solde = $solde;
+        $this->solde = $this->solde + abs($solde);
 
         return $this;
     }
@@ -190,6 +213,36 @@ class Compte
             // set the owning side to null (unless already changed)
             if ($transaction->getCompte() === $this) {
                 $transaction->setCompte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transaction[]
+     */
+    public function getRetraits(): Collection
+    {
+        return $this->retraits;
+    }
+
+    public function addRetrait(Transaction $retrait): self
+    {
+        if (!$this->retraits->contains($retrait)) {
+            $this->retraits[] = $retrait;
+            $retrait->setCompteRetrait($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRetrait(Transaction $retrait): self
+    {
+        if ($this->retraits->removeElement($retrait)) {
+            // set the owning side to null (unless already changed)
+            if ($retrait->getCompteRetrait() === $this) {
+                $retrait->setCompteRetrait(null);
             }
         }
 
