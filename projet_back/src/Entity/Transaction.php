@@ -69,12 +69,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "path"="/user/compte/transactions",
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
- *          }, 
- *          "admin_compte_transactions"={
- *              "method"="GET",
- *              "path"="/admin/compte/transactions",
- *              "security"="is_granted('ROLE_ADMINAGENCE')", 
- *              "security_message"="permission denied.",
  *          },
  *          "compte_mes_depots"={
  *              "method"="GET",

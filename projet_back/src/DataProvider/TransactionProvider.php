@@ -67,7 +67,7 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
             yield $tr;
         }
         
-        if ($operationName==="admin_compte_transactions" || $operationName==="user_compte_transactions") {
+        if ($operationName==="user_compte_transactions") {
             
             $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
             yield $trans;
