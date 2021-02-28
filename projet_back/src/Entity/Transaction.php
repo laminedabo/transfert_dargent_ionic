@@ -32,7 +32,6 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "retrait"={
  *              "method"="POST",
  *              "path"="/user/comptes/{id}/retrait/{code}",
- *              "requirements"={"id"="\d+"},
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },
@@ -124,6 +123,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "security_message"="Vous n'avez pas ces privileges.",
  *              "path"="admin/transactions/{id}",
  *          },
+ *          "cancel_transaction"={
+ *              "method"="PUT",
+ *              "path"="/user/transaction/{id}/cancel",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
+ *          }
  *     },
  * )
  * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "senderName":"exact", "sender.id":"exact"})

@@ -101,6 +101,9 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             if ($to = $this->_client_repo->findOneByPhone($data->getSendTo()->getTelephone())) {
                 $data->setSendTo($to);
             }
+
+            /** Envoi SMS */
+            // $this->_transaction->envoiArgentSMS($data->getSendTo()->getTelephone(), $data->getSendFrom()->getFirstName().' '.$data->getSendFrom()->getLastName(),$data->getMontant(), $data->getCode());
         }
 
         /**
@@ -115,12 +118,15 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
                 //     ['content-type' => 'text/plain']
                 // );
             }
-            if ($data->GetWithdrawer()!==null) {
+            if ($data->getWithdrawer()!==null) {
                 return new JsonResponse(['infos'=>'Cette transaction est déjà validée']);
+            }
+            if ($data->getEtat()==='annulé') {
+                return new JsonResponse(['infos'=>'Cette transaction a été annulée']);
             }
             $user = $this->_security -> getUser();
             $data->setWithdrawer($user);
-            $data->setEtat('OK');
+            $data->setEtat('retiré');
             $data->setRetiredAt(new \DateTime());
             if (!$this->_request->attributes->get('id') || !$compteRetrait = $this->_transact_repo->find($this->_request->attributes->get('id'))) {
                 return new JsonResponse(['infos'=>'compte introuvable']);
@@ -129,6 +135,22 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             
             $compteRetrait->setSolde($data->getMontant());
             $data->setCompteRetrait($compteRetrait);
+
+             /** Envoi SMS */
+            // $this->_transaction->retraitArgentSMS($data->getSendFrom()->getTelephone(), $data->getSendTO()->getFirstName().' '.$data->getSendTo()->getLastName(),$data->getMontant());
+        }
+
+        /**
+         * Annuler un depot non encore retiré
+         */
+        if (isset($context['item_operation_name']) && $context['item_operation_name']==='cancel_transaction') {
+            if (!$data->getWithdrawer()) {
+                $data->setEtat('annulé');
+                $data->getCompte()->setSolde($data->getMontant());
+            }
+            else{
+                return new JsonResponse(['infos'=>'Cette transaction est déjà retirée']);
+            }
         }
         
         dd($data);

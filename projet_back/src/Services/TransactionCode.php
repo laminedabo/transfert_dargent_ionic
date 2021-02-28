@@ -69,8 +69,8 @@ class TransactionCode{
 
     public function envoiArgentSMS($receiverNumber, $sender, $montant, $code){
         $config = array(
-            'clientId' => 'your_client_id',
-            'clientSecret' => 'your_client_secret'
+            'clientId' => 'dT2dAajN6AjG0Doa3Tbz7YkXzXYDnAyw',
+            'clientSecret' => 'R9d6kAXZ8qeWa7jn'
         );
         
         $osms = new Osms($config);
@@ -79,7 +79,8 @@ class TransactionCode{
         $response = $osms->getTokenFromConsumerKey();
         
         if (!empty($response['access_token'])) {
-            $senderAddress = 'tel:+22100000000';
+            // dd($response['access_token']);
+            $senderAddress = 'tel:+2210000';
             $receiverAddress = 'tel:+221'.$receiverNumber;
             $message = 'Bonjour. '.$sender.' vous a envoyés '.$montant.'f. via SA transfert d\'argent. Code de retrait: '.$code;
             $senderName = 'SA transfert d\'argent';
@@ -87,6 +88,7 @@ class TransactionCode{
             $osms->sendSMS($senderAddress, $receiverAddress, $message, $senderName);
         } else {
             // error
+            dd('error');
         }
     }
 
@@ -102,7 +104,7 @@ class TransactionCode{
         $response = $osms->getTokenFromConsumerKey();
         
         if (!empty($response['access_token'])) {
-            $senderAddress = 'tel:+22100000000';
+            $senderAddress = 'tel:+2210000';
             $receiverAddress = 'tel:+221'.$receiverNumber;
             $message = 'Bonjour. Les '.$montant.'f envoyés à '.$beneficiaire.' viennent d\'être retirés. Merci et à bientôt';
             $senderName = 'SA transfert d\'argent';

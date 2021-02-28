@@ -11,7 +11,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *      attributes={
+ *          "denormalization_context"={"groups"={"agence_write"},"enable_max_depth"=true}
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
  */
 class Agence
@@ -28,6 +32,7 @@ class Agence
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="agence address is required")
      * @Groups({"compte_details"})
+     * @Groups({"agence_write"})
      */
     private $adresse;
 
@@ -41,6 +46,7 @@ class Agence
      * )
      * @Assert\NotBlank(message="agence number is required")
      * @Groups({"compte_details"})
+     * @Groups({"agence_write"})
      */
     private $telephone;
 
@@ -65,6 +71,7 @@ class Agence
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="agences", cascade={"persist"})
      * @Assert\NotBlank(message="error. choose or create an admin")
+     * @Groups({"agence_write"})
      */
     private $admins;
 
@@ -75,12 +82,14 @@ class Agence
 
     /**
      * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="agence", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"agence_write"})
      */
     private $comptes;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"compte_details"})
+     * @Groups({"agence_write"})
      */
     private $nom;
 

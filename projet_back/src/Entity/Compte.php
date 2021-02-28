@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      collectionOperations={
  *         "get"={
- *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
  *              "security_message"="permission denied.",
  *              "path"="/admin/comptes",
  *          }
@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "patch"={
  *              "path"="/admin/comptes/{id}",
  *              "requirements"={"id"="\d+"},
- *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
  *              "security_message"="permission denied.",
  *              "denormalization_context"={"groups"={"compte_statut"}},
  *         },
@@ -35,7 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *              "path"="/admin/comptes/{id}",
  *              "requirements"={"id"="\d+"},
  *              "normalization_context"={"groups"={"compte_details"},"enable_max_depth"=true},
- *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
  *              "security_message"="permission denied.",
  *          },
  *          "rechargement"={

@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -48,11 +49,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"agence_write"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"agence_write"})
      */
     private $prenom;
 
@@ -64,11 +67,13 @@ class User implements UserInterface
      *     message="Invalid phone number(Ex. 771234567)"
      * )
      * @Assert\NotBlank(message="empty phone number")
+     * @Groups({"agence_write"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"agence_write"})
      */
     private $adresse;
 
@@ -149,10 +154,7 @@ class User implements UserInterface
 
     public function setPassword(string $password): self
     {
-        // $this->password =$password;
         $this->password = password_hash($password,PASSWORD_ARGON2ID);
-        
-
         return $this;
     }
 
