@@ -13,9 +13,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints\Unique;
 
 /**
- * @UniqueEntity({"username","telephone"})
+ * @UniqueEntity({"telephone"})
  * @ApiResource()
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
@@ -41,10 +42,7 @@ class User implements UserInterface
      */
     private $password;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank(message="empty username")
-     */
+    
     private $username;
 
     /**
@@ -67,6 +65,7 @@ class User implements UserInterface
      *     message="Invalid phone number(Ex. 771234567)"
      * )
      * @Assert\NotBlank(message="empty phone number")
+     * @Assert\Unique(message="le telephone existe dans la base de données")
      * @Groups({"agence_write"})
      */
     private $telephone;
@@ -83,11 +82,6 @@ class User implements UserInterface
     private $statut="actif";
 
     /**
-     * @ORM\ManyToMany(targetEntity=Agence::class, mappedBy="admins")
-     */
-    private $agences;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="utilisateurs")
      */
     private $agence;
@@ -99,6 +93,9 @@ class User implements UserInterface
 
     public function __construct()
     {
+        if (!$this->password) {
+            $this->password = $this->password = password_hash('passe',PASSWORD_ARGON2ID);// a générer automatiquement;
+        }
         $this->agences = new ArrayCollection();
         $this->transactions = new ArrayCollection();
     }
@@ -115,7 +112,7 @@ class User implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->username;
+        return (string) $this->telephone;
     }
 
     public function setUsername(string $username): self
@@ -234,33 +231,6 @@ class User implements UserInterface
     public function setStatut(?string $statut): self
     {
         $this->statut = $statut;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Agence[]
-     */
-    public function getAgences(): Collection
-    {
-        return $this->agences;
-    }
-
-    public function addAgence(Agence $agence): self
-    {
-        if (!$this->agences->contains($agence)) {
-            $this->agences[] = $agence;
-            $agence->addAdmin($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAgence(Agence $agence): self
-    {
-        if ($this->agences->removeElement($agence)) {
-            $agence->removeAdmin($this);
-        }
 
         return $this;
     }

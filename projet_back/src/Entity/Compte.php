@@ -77,7 +77,7 @@ class Compte
      * @ORM\Column(type="float", length=255)
      * @Assert\NotBlank(message="sold is required")
      *  @Assert\Expression(
-     *     "this.getId() !== null",
+     *     "this.getId() === null",
      *     message="A l'ouverture, le solde doit atteindre au moins 700.000CFA!"
      * )
      * @Assert\Positive(message="le solde ne peut pas etre negatif")
@@ -85,8 +85,8 @@ class Compte
      *     type="numeric",
      *     message="sold not valid."
      * )
-     *
      * @Groups({"compte_details","compte_recharge"})
+     * @Groups({"agence_write"})
      */
     private $solde;
 
@@ -95,14 +95,6 @@ class Compte
      * @Groups({"compte_details","compte_statut"})
      */
     private $statut="actif";
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Agence::class, inversedBy="comptes", cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
-     * @Assert\NotBlank(message="agence is required")
-     * @Groups({"compte_details"})
-     */
-    private $agence;
 
     /**
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compte")
@@ -116,6 +108,11 @@ class Compte
      * @ORM\OneToMany(targetEntity=Transaction::class, mappedBy="compteRetrait")
      */
     private $retraits;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Agence::class, mappedBy="compte", cascade={"persist", "remove"})
+     */
+    private $agence;
 
     public function __construct(){
         $this->createdAt = new \DateTime();

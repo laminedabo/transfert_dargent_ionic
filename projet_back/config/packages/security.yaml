@@ -9,7 +9,7 @@ security:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: username
+                property: telephone
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -54,4 +54,4 @@ security:
         - { path: ^/api,       roles:[IS_AUTHENTICATED_FULLY ] }
     role_hierarchy:
         ROLE_SYSTEMADMIN: [ROLE_CAISSIER]
-        ROLE_ADMIN: [ROLE_USER]
+        ROLE_ADMINAGENCE: [ROLE_UTILISATEUR]

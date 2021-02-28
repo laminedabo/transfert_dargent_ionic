@@ -9,11 +9,42 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @UniqueEntity({"telephone"})
  * @ApiResource(
  *      attributes={
- *          "denormalization_context"={"groups"={"agence_write"},"enable_max_depth"=true}
+ *          "normalization_context"={"enable_max_depth"=true}
+ *      },
+ *      collectionOperations={
+ *          "get",
+ *          "creer_agence"={
+ *              "method"="POST",
+ *              "path"="api/admin/agences/new",
+ *              "security"="is_granted('ROLE_ADMINSYSTEME')",
+ *              "security_message"="permission denied",
+ *              "denormalization_context"={"groups"={"agence_write"}}
+ *          }
+ *      },
+ *      itemOperations={
+ *          "get",
+ *          "bloquer_agence"={
+ *              "method"="PUT",
+ *              "path"="/admin/agences/{id}/block",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security_message"="permission denied.",
+ *              "denormalization_context"={"groups"={"agence_statut"}},
+ *         },
+ *          "debloquer_agence"={
+ *              "method"="PUT",
+ *              "path"="/admin/agences/{id}/enable",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
+ *              "security_message"="permission denied.",
+ *              "denormalization_context"={"groups"={"agence_statut"}},
+ *         },
  *      }
  * )
  * @ORM\Entity(repositoryClass=AgenceRepository::class)
@@ -45,35 +76,26 @@ class Agence
      *     message="Invalid phone number(Ex. 771234567)"
      * )
      * @Assert\NotBlank(message="agence number is required")
-     * @Groups({"compte_details"})
      * @Groups({"agence_write"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"compte_details"})
      */
     private $lattitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
-     * @Groups({"compte_details"})
      */
     private $longitude;
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true)
      * @Groups({"compte_details"})
+     * @Groups({"agence_statut"})
      */
     private $statut="actif";
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="agences", cascade={"persist"})
-     * @Assert\NotBlank(message="error. choose or create an admin")
-     * @Groups({"agence_write"})
-     */
-    private $admins;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence", cascade={"persist"})
@@ -81,17 +103,26 @@ class Agence
     private $utilisateurs;
 
     /**
-     * @ORM\OneToMany(targetEntity=Compte::class, mappedBy="agence", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"agence_write"})
-     */
-    private $comptes;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank(message="agence name is required")
      * @Groups({"compte_details"})
      * @Groups({"agence_write"})
      */
     private $nom;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="agences", cascade={"persist"})
+     * @Assert\NotBlank(message="agence admin is required")
+     * @Groups({"agence_write"})
+     */
+    private $administrateur;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Compte::class, inversedBy="agence", cascade={"persist", "remove"})
+     * @Assert\NotBlank(message="agence account is required")
+     * @Groups({"agence_write"})
+     */
+    private $compte;
 
     public function __construct()
     {
@@ -168,30 +199,6 @@ class Agence
     /**
      * @return Collection|User[]
      */
-    public function getAdmins(): Collection
-    {
-        return $this->admins;
-    }
-
-    public function addAdmin(User $admin): self
-    {
-        if (!$this->admins->contains($admin)) {
-            $this->admins[] = $admin;
-        }
-
-        return $this;
-    }
-
-    public function removeAdmin(User $admin): self
-    {
-        $this->admins->removeElement($admin);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
     public function getUtilisateurs(): Collection
     {
         return $this->utilisateurs;
@@ -219,36 +226,6 @@ class Agence
         return $this;
     }
 
-    /**
-     * @return Collection|Compte[]
-     */
-    public function getComptes(): Collection
-    {
-        return $this->comptes;
-    }
-
-    public function addCompte(Compte $compte): self
-    {
-        if (!$this->comptes->contains($compte)) {
-            $this->comptes[] = $compte;
-            $compte->setAgence($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCompte(Compte $compte): self
-    {
-        if ($this->comptes->removeElement($compte)) {
-            // set the owning side to null (unless already changed)
-            if ($compte->getAgence() === $this) {
-                $compte->setAgence(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getNom(): ?string
     {
         return $this->nom;
@@ -264,4 +241,28 @@ class Agence
     // public function __toString(): string{
     //     return $this->nom.' '.$this->adresse;
     // }
+
+    public function getAdministrateur(): ?User
+    {
+        return $this->administrateur;
+    }
+
+    public function setAdministrateur(?User $administrateur): self
+    {
+        $this->administrateur = $administrateur;
+
+        return $this;
+    }
+
+    public function getCompte(): ?Compte
+    {
+        return $this->compte;
+    }
+
+    public function setCompte(?Compte $compte): self
+    {
+        $this->compte = $compte;
+
+        return $this;
+    }
 }

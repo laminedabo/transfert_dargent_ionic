@@ -49,13 +49,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          },
  *          "user_client_nci"={
  *              "method"="GET",
- *              "path"="/user/client/{nci}",
+ *              "path"="/user/client/nci/{nci}",
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },
  *          "user_client_phone"={
  *              "method"="GET",
- *              "path"="/user/client/{phone}",
+ *              "path"="/user/client/phone/{phone}",
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },

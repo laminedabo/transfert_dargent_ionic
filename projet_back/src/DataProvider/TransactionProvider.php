@@ -109,7 +109,7 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
         if($operationName==='user_agence_compte'){
             $compte = null;
             if ($this->_user_repo->find($this->_request->attributes->get('id'))!==null && $this->_user_repo->find($this->_request->attributes->get('id'))->getAgence()!==null) {
-                $compte = $this->_user_repo->find($this->_request->attributes->get('id'))->getAgence()->getComptes()[0];
+                $compte = $this->_user_repo->find($this->_request->attributes->get('id'))->getAgence()->getCompte();
             }
             yield $compte;
         }
