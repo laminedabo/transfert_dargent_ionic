@@ -28,7 +28,7 @@ class Client
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank(message="firstName cannot be empty")
      * @Groups({"transaction_write"})
      */
@@ -42,7 +42,7 @@ class Client
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\Regex(
      *     pattern="/((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
      *     match=true,
@@ -54,7 +54,7 @@ class Client
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"transaction_write"})
      */
     private $IdCard;

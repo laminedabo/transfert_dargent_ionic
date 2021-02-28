@@ -69,16 +69,16 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
+        /** Les infos de l'utilisateur connecté */
+        $user = $this->_security -> getUser();
+        $idCmpte = $user->getAgence()->getCompte()->getId();
 
         /**
          * Depot
          */
         if ($this->_request->getMethod() === 'POST' && preg_match( '/depot/' , $this->_request->getPathInfo())) {
-            $accountId = $this->_request->attributes->get('id');
-            if (!$accountId || !$account = $this->_compte_repo->find($accountId)) {
-                return new JsonResponse(['infos'=>'compte introuvable']);
-            }
-            if (($data->getMontant())>$account->getSolde()) {
+            $account = $this->_compte_repo->find($idCmpte);
+            if (($data->getMontant()) > $account->getSolde()) {
                 return new JsonResponse(['infos'=>'le solde du compte est insuffisant pour cette transaction']);
             }
 
@@ -92,7 +92,6 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             $data->setPartDepot(($partAgence*10)/100);
             $data->setPartRetrait(($partAgence*20)/100);
 
-            $user = $this->_security -> getUser();
             $data->setSender($user);
 
             if ($from = $this->_client_repo->findOneByIdCard($data->getSendFrom()->getIdCard())) {
@@ -124,14 +123,10 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             if ($data->getEtat()==='annulé') {
                 return new JsonResponse(['infos'=>'Cette transaction a été annulée']);
             }
-            $user = $this->_security -> getUser();
             $data->setWithdrawer($user);
             $data->setEtat('retiré');
             $data->setRetiredAt(new \DateTime());
-            if (!$this->_request->attributes->get('id') || !$compteRetrait = $this->_transact_repo->find($this->_request->attributes->get('id'))) {
-                return new JsonResponse(['infos'=>'compte introuvable']);
-            }
-
+            $compteRetrait = $user ->getAgence() ->getCompte();
             
             $compteRetrait->setSolde($data->getMontant());
             $data->setCompteRetrait($compteRetrait);
@@ -153,7 +148,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             }
         }
         
-        dd($data);
+        // dd($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
         return $data;
@@ -164,7 +159,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
      */
     public function remove($data, array $context = [])
     {
-        $this->_entityManager->remove($data);
-        $this->_entityManager->flush();
+        // $this->_entityManager->remove($data);
+        // $this->_entityManager->flush();
     }
 }

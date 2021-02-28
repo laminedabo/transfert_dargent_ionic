@@ -32,6 +32,7 @@ class User implements UserInterface
     
     /**
      * @ORM\Column(type="json")
+     * @Groups({"agence_add_user"})
      */
     private $roles = [];
 
@@ -47,18 +48,18 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"agence_write"})
+     * @Groups({"agence_write","agence_add_user"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"agence_write"})
+     * @Groups({"agence_write","agence_add_user"})
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30,nullable=false)
      * @Assert\Regex(
      *     pattern="/((\+221|00221)?)((7[7608][0-9]{7}$)|(3[03][98][0-9]{6}$))/",
      *     match=true,
@@ -66,7 +67,7 @@ class User implements UserInterface
      * )
      * @Assert\NotBlank(message="empty phone number")
      * @Assert\Unique(message="le telephone existe dans la base de données")
-     * @Groups({"agence_write"})
+     * @Groups({"agence_write","agence_add_user"})
      */
     private $telephone;
 
@@ -96,7 +97,6 @@ class User implements UserInterface
         if (!$this->password) {
             $this->password = $this->password = password_hash('passe',PASSWORD_ARGON2ID);// a générer automatiquement;
         }
-        $this->agences = new ArrayCollection();
         $this->transactions = new ArrayCollection();
     }
 

@@ -78,8 +78,6 @@ class TransactionRepository extends ServiceEntityRepository
         ->setParameter('val', $cid)
         ->leftJoin('t.sender','sd')
         ->andWhere('sd.id = :uid')
-        ->leftJoin('t.withdrawer','wd')
-        ->orWhere('wd.id = :uid')
         ->setParameter('uid', $uid)
         ->orderBy('t.id', 'ASC')
         ->getQuery()
@@ -87,15 +85,13 @@ class TransactionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findCompteRetrait($idCmpte){
+    public function findCompteRetrait($uid, $cid){
         return $this->createQueryBuilder('t')
             ->leftJoin('t.compteRetrait','ctr')
             ->andWhere('ctr.id = :val')
             ->setParameter('val', $cid)
-            ->leftJoin('t.sender','sd')
-            ->andWhere('sd.id = :uid')
             ->leftJoin('t.withdrawer','wd')
-            ->orWhere('wd.id = :uid')
+            ->andWhere('wd.id = :uid')
             ->setParameter('uid', $uid)
             ->orderBy('t.id', 'ASC')
             ->getQuery()
@@ -117,7 +113,7 @@ class TransactionRepository extends ServiceEntityRepository
     public function findCompteAllRetrait($idCmpte){
         return $this->createQueryBuilder('t')
             ->leftJoin('t.compteRetrait','ctr')
-            ->orWhere('ctr.id = :val')
+            ->andWhere('ctr.id = :val')
             ->setParameter('val', $idCmpte)
             ->orderBy('t.id', 'ASC')
             ->getQuery()

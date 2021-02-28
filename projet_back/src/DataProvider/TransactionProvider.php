@@ -7,6 +7,7 @@ use App\Services\TransactionCode;
 use App\Repository\UserRepository;
 use App\Repository\ClientRepository;
 use App\Repository\TransactionRepository;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
@@ -20,19 +21,22 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
     private $_transaction;
     private $_client_repo;
     private $_user_repo;
+    private $_security;
 
     public function __construct(
         RequestStack $request,
         TransactionRepository $transact_repo,
         TransactionCode $trans,
         ClientRepository $client_repo,
-        UserRepository $user_repo
+        UserRepository $user_repo,
+        Security $security
     ){
         $this->_request = $request->getCurrentRequest();
         $this->_transact_repo = $transact_repo;
         $this->_transaction = $trans;
         $this->_client_repo = $client_repo;
         $this->_user_repo = $user_repo;
+        $this->_security = $security;
     }
 
 
@@ -51,6 +55,11 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
 
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable
     {
+        /** L'utilisateur connecté */
+        $user = $this->_security -> getUser();
+        $idUser = $user->getId('id');
+        $idCmpte = $user->getAgence()->getCompte()->getId();
+
         if($operationName==='getByCode'){
             if (!$tr = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'))) {
                 yield 'infos'=>'code invalide ou introuvable';
@@ -59,47 +68,39 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
         }
         
         if ($operationName==="admin_compte_transactions" || $operationName==="user_compte_transactions") {
-            $idUser = $this->_request->attributes->get('id');
-            $idCmpte = $this->_request->attributes->get('idc');
+            
             $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
             yield $trans;
         }
 
         if ($operationName==="compte_mes_depots") {
-            $idUser = $this->_request->attributes->get('id');
-            $idCmpte = $this->_request->attributes->get('idc');
-            $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
+            $trans = $this->_transact_repo->findCompteDepot($idUser, $idCmpte);
             yield $trans;
         }
 
         if ($operationName==="compte_mes_retraits") {
-            $idUser = $this->_request->attributes->get('id');
-            $idCmpte = $this->_request->attributes->get('idc');
-            $trans = $this->_transact_repo->findByUserAndCompte($idUser, $idCmpte);
+            $trans = $this->_transact_repo->findCompteRetrait($idUser, $idCmpte);
             yield $trans;
         }
 
         if ($operationName==="compte_all_transactions") {
-            $idCmpte = $this->_request->attributes->get('id');
             $trans = $this->_transact_repo->findCompteAll($idCmpte);
             yield $trans;
         }
 
         if ($operationName==="compte_all_retraits") {
-            $idCmpte = $this->_request->attributes->get('id');
             $trans = $this->_transact_repo->findCompteAllRetrait($idCmpte);
             yield $trans;
         }
 
         if ($operationName==="compte_all_depots") {
-            $idCmpte = $this->_request->attributes->get('id');
             $trans = $this->_transact_repo->findCompteAllDepot($idCmpte);
             yield $trans;
         }
 
         if($operationName==='calcul_frais'){
             $frais=null;
-            $montant = $idUser = $this->_request->attributes->get('montant');
+            $montant = $this->_request->attributes->get('montant');
             if (is_numeric($montant)) {
                 $frais = $this->_transaction->frais($montant)['frais'];
             }
@@ -107,10 +108,7 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
         }
 
         if($operationName==='user_agence_compte'){
-            $compte = null;
-            if ($this->_user_repo->find($this->_request->attributes->get('id'))!==null && $this->_user_repo->find($this->_request->attributes->get('id'))->getAgence()!==null) {
-                $compte = $this->_user_repo->find($this->_request->attributes->get('id'))->getAgence()->getCompte();
-            }
+            $compte = $user->getAgence()->getCompte();
             yield $compte;
         }
 

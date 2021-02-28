@@ -32,7 +32,7 @@ final class AgenceDataPersister implements ContextAwareDataPersisterInterface
             }
             if (!$data->getAdministrateur()->getPrenom()) {
                 return new Response(
-                    'Le numero prénom est requis',
+                    'Le prénom est requis',
                     Response::HTTP_FORBIDDEN,
                     ['content-type' => 'text/plain']
                 );

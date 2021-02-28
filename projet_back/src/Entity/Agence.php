@@ -28,7 +28,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          }
  *      },
  *      itemOperations={
- *          "get",
+ *          "agence_get_user"={
+ *              "method"="GET",
+ *              "path"="/admin/agences/{id}",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security_message"="permission denied.",
+ *              "normalization_context"={"groups"={"agence_get_user"}},
+ *         },
  *          "bloquer_agence"={
  *              "method"="PUT",
  *              "path"="/admin/agences/{id}/block",
@@ -44,6 +51,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *              "security"="is_granted('ROLE_ADMINSYSTEME')", 
  *              "security_message"="permission denied.",
  *              "denormalization_context"={"groups"={"agence_statut"}},
+ *         },
+ *          "agence_add_user"={
+ *              "method"="PUT",
+ *              "path"="/admin/agences/{id}/addUser",
+ *              "requirements"={"id"="\d+"},
+ *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security_message"="permission denied.",
+ *              "denormalization_context"={"groups"={"agence_add_user"}},
  *         },
  *      }
  * )
@@ -99,6 +114,7 @@ class Agence
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="agence", cascade={"persist"})
+     * @Groups({"agence_add_user","agence_get_user"})
      */
     private $utilisateurs;
 
