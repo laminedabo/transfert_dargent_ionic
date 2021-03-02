@@ -1,0 +1,60 @@
+ion-item{
+    --border-color: red;
+    margin-bottom: 10px;
+}
+
+mat-icon, .ic-menu{
+    color: red
+}
+
+.solde-card{
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    padding: 5px;
+    height: 80px;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: white;
+}
+
+.solde-card-header{
+    font-size: 10px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.solde-card-content{
+    font-size: 35px;
+    color: #32a1ce;  
+    height: 40px;
+    margin: 0px;
+    padding: 0px;
+}
+
+.solde-card-subtitle{
+    font-size: 8px;
+    font-style: normal;
+    margin: 0px;
+    padding: 0px;
+}
+
+.eye-btn{
+    cursor: pointer;
+    margin-bottom: -5px;
+}
+
+
+.logo{
+    width: 24%;
+    height: 50px;
+    margin-right: 15%;
+}
+
+.btn-menu{
+    width: 26%;
+}
+
+.person-circle{
+    width: 13%;
+    height: 50px;
+    cursor: pointer;
+}

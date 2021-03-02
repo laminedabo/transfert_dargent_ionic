@@ -1,0 +1,64 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-title>Accueil</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+  <ion-menu side="start" menuId="main-menu" contentId="main" class="my-custom-menu">
+    <ion-header>
+      <ion-toolbar color="secondary">
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content  style="background-color: #cf92d1;">
+      <ion-list lines="inset">
+        <ion-item routerLink="/" routerDirection="root">
+          <mat-icon slot="start">home</mat-icon>
+          <ion-label>Home</ion-label>
+        </ion-item>
+        <ion-item routerLink="/" routerDirection="root">
+          <ion-icon name="sync-outline" slot="start"></ion-icon> 
+          <ion-label>Mes transactions</ion-label>
+        </ion-item>
+        <ion-item routerLink="/" routerDirection="root">
+          <mat-icon slot="start"> money</mat-icon>
+          <ion-label>Mes commissions</ion-label>
+        </ion-item>
+        <ion-item routerLink="/" routerDirection="root">
+          <ion-icon name="calculator-outline" slot="start"></ion-icon>
+          <ion-label>Calculateur de frais</ion-label>
+        </ion-item>
+        <ion-item routerLink="/" routerDirection="root">
+          <ion-icon name="exit-outline" slot="start"></ion-icon>
+          <ion-label>Déconnexion</ion-label>
+        </ion-item>
+        
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main"></ion-router-outlet>
+
+  <ion-tabs class="ion-padding ion-no-border">
+    <!-- Tab bar -->
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button selected=true tab="main">
+        <mat-icon>home</mat-icon>
+      </ion-tab-button>
+  
+      <ion-tab-button tab="transaction">
+        <mat-icon>history</mat-icon>
+      </ion-tab-button>
+  
+      <ion-tab-button tab="commission">
+        <mat-icon> money</mat-icon>
+      </ion-tab-button>
+  
+      <ion-tab-button tab="calcul-frais">
+        <ion-icon name="calculator-outline"></ion-icon>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+
+</ion-content>
