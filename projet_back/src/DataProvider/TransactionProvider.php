@@ -42,7 +42,7 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return Transaction::class === $resourceClass;
+        return Transaction::class === $resourceClass && $operationName !=="get";
     }
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Transaction

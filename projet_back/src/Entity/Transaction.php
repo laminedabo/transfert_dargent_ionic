@@ -20,7 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "get"={
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
- *              "path"="admin/transactions",
+ *              "path"="user/transactions",
  *          },
  *         "depot"={
  *              "method"="POST",
@@ -118,7 +118,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          }
  *     },
  * )
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "senderName":"exact", "sender.id":"exact"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "sendFrom.telephone":"exact", "sender.id":"exact", "montant":"exact"})
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
  */
 class Transaction extends TransactionCode
