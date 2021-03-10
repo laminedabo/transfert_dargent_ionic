@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Services\TransactionCode;
+use App\Controller\TransactionController;
 use App\Repository\TransactionRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -28,17 +29,12 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },
- *          "retrait"={
- *              "method"="POST",
- *              "path"="/user/compte/retrait/{code}",
- *              "security"="is_granted('ROLE_UTILISATEUR')", 
- *              "security_message"="permission denied.",
- *          },
  *         "getByCode"={
  *              "method"="GET",
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *              "path"="/user/transaction/{code}",
+ *              "normalization_context"={"groups"={"transaction_read"},"enable_max_depth"=true}
  *          },
  *          "calcul_frais"={
  *                  "method"="GET",
@@ -115,6 +111,13 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "requirements"={"id"="\d+"},
  *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
+ *          },
+ *          "retrait"={
+ *              "method"="PUT",
+ *              "controller"=TransactionController::class,
+ *              "path"="/user/retrait/{id}",
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="permission denied.",
  *          }
  *     },
  * )
@@ -127,13 +130,13 @@ class Transaction extends TransactionCode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $code;
 
@@ -145,25 +148,25 @@ class Transaction extends TransactionCode
      *     message="value not valid."
      * )
      * @Groups({"transaction_write"})
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $sendAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $retiredAt;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"compte_details"})
+     * @Groups({"compte_details","transaction_read"})
      */
     private $frais;
 
@@ -194,13 +197,15 @@ class Transaction extends TransactionCode
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions", cascade={"persist"})
+     * @Groups({"transaction_read"})
      * 
      * l'utilisateur qui réalise l'envoi
      */
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="transactions", cascade={"persist"})
+     * @Groups({"transaction_read"})
      * 
      * l'utilisateur qui réalise le retrait
      */
@@ -210,7 +215,7 @@ class Transaction extends TransactionCode
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="sender is required")
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $sendFrom;
 
@@ -218,7 +223,7 @@ class Transaction extends TransactionCode
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank(message="receiver is required")
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $sendTo;
 

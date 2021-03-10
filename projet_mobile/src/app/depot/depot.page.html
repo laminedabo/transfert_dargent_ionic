@@ -1,0 +1,133 @@
+<ion-header class="header">
+  <div style="text-align:center; margin-top: 20px;">
+    <ion-icon routerLink="/accueil" class="arrow_back" slot="start" name="arrow-back-sharp"></ion-icon>
+    <img class="logo" src="../../assets/mobile_money_logo.jpeg" alt="logo">
+    <ion-icon class="person-circle" style="float: right;" name="person-circle-outline"></ion-icon>
+    <div class="login-text"><ion-icon class="ic-depot" name="arrow-redo-outline" slot="start"></ion-icon>Dépot</div>
+    <div class="line"></div>
+  </div>
+</ion-header>
+
+<ion-content>
+
+  <mat-horizontal-stepper #stepper>
+    <mat-step [stepControl]="firstFormGroup" errorMessage="Erreur(s)">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Emétteur</ng-template>
+        <mat-form-field class="form-field">
+          <mat-label>N° CNI</mat-label>
+          <input matInput placeholder="N° carte d'identité" formControlName="IdCard" required>
+        <mat-error
+          *ngIf="firstFormGroup.get('IdCard').hasError('required')">
+          Le CIN est requis
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Nom</mat-label>
+          <input matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
+          <mat-error
+          *ngIf="firstFormGroup.get('firstName').hasError('required')">
+          Le nom est requis
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Prénom</mat-label>
+          <input matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
+          <mat-error
+          *ngIf="firstFormGroup.get('lastName').hasError('required')">
+          Le prénom est requis
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Téléphone</mat-label>
+          <input matInput placeholder="Format: 771234567" formControlName="telephone" required>
+          <mat-error
+          *ngIf="firstFormGroup.get('telephone').hasError('required')">
+          Le téléphone est requis
+        </mat-error>
+        <mat-error
+          *ngIf="firstFormGroup.get('telephone').hasError('pattern')">
+          Le téléphone est incorrecte
+        </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Montant</mat-label>
+          <input matInput  placeholder="La somme sans les frais" formControlName="montant" required>
+          <mat-error
+            *ngIf="firstFormGroup.get('montant').hasError('required')">
+            Le montant est requis
+          </mat-error>
+          <mat-error
+            *ngIf="firstFormGroup.get('montant').hasError('pattern')">
+            Le montant est incorrecte
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="frais">
+          <mat-label>Frais</mat-label>
+          <input matInput readonly [(ngModel)]="frais" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Total</mat-label>
+          <input matInput readonly [(ngModel)]="total" [ngModelOptions]="{standalone: true}">
+        </mat-form-field>
+        <div>
+          <button class="btn-suivant" mat-flat-button color="warn" matStepperNext>Suivant</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" errorMessage="Erreur(s)">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Bénéficiaire</ng-template>
+
+        <mat-form-field class="form-field">
+          <mat-label>Téléphone</mat-label>
+          <input matInput placeholder="Format: 771234567" formControlName="telephone" required>
+          <mat-error
+            *ngIf="secondFormGroup.get('telephone').hasError('pattern')">
+            Le téléphone est incorrecte
+          </mat-error>
+          <mat-error
+            *ngIf="secondFormGroup.get('telephone').hasError('required')">
+            Le téléphone est requis
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Nom</mat-label>
+          <input matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
+          <mat-error
+            *ngIf="secondFormGroup.get('firstName').hasError('required')">
+            Le nom est requis
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field">
+          <mat-label>Prénom</mat-label>
+          <input matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
+          <mat-error
+            *ngIf="secondFormGroup.get('lastName').hasError('required')">
+            Le prénom est requis
+          </mat-error>
+        </mat-form-field>
+
+      </form>
+      <div>
+        <button *ngIf="!showCode" [disabled]= "firstFormGroup.invalid || secondFormGroup.invalid" mat-flat-button (click)="showAlert()" color="warn" class="btn-suivant">Envoyer</button>
+        <button *ngIf="showCode" mat-button mat-flat-button color="warn" class="btn-suivant" (click)="stepper.reset()">Réinitialiser</button>
+      </div>
+
+      <div *ngIf="showCode" class="codeRetrait">
+        <div class="codeLabel">Code</div>
+        <div class="code">{{code}}</div>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+</ion-content>
+

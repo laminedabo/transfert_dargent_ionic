@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
-
 import { MaterialModule } from '../material.module';
-import { MainPageRoutingModule } from './main-routing.module';
 
-import { MainPage } from './main.page';
+import { RetraitPageRoutingModule } from './retrait-routing.module';
+
+import { RetraitPage } from './retrait.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MainPageRoutingModule,
+    RetraitPageRoutingModule,
     MaterialModule
   ],
-  declarations: [MainPage]
+  declarations: [RetraitPage]
 })
-export class MainPageModule {}
+export class RetraitPageModule {}

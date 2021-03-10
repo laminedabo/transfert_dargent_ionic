@@ -8,21 +8,27 @@
   </div>
 
   <form class="ion-padding">
-    <ion-item lines="full">
-      <ion-label position="floating">Telephone</ion-label>
-      <ion-input type="tel" required></ion-input>
-    </ion-item>
+    <mat-form-field>
+      <mat-label>Phone number</mat-label>
+      <input matInput required [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}">
+      <mat-icon matSuffix>phone</mat-icon>
+    </mat-form-field>
 
-    <ion-item lines="full">
-      <ion-label position="floating">Password</ion-label>
-      <ion-input type="password" required></ion-input>
-    </ion-item>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" required>
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
+    </mat-form-field>
 
-    <ion-row>
+    <div *ngIf="login_err" class="error-message">Téléphone ou mot de pass incorrecte</div>
+
       <a class="forget-pw" [routerLink]="['/forgot-password']">Mot de pass oublié?</a>
-    </ion-row>
 
   </form>
+
+  <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
 
 </ion-content>
 
@@ -30,7 +36,7 @@
   <ion-toolbar>
     <ion-row>
       <ion-col>
-        <ion-button routerLink="/accueil" shape="round"  size="large" type="submit" mode="ios" class="btn-submit" expand="block">Se connecter</ion-button>
+        <ion-button shape="round" (click)="login()"  size="large" type="submit" mode="ios" class="btn-submit" expand="block">Se connecter</ion-button>
       </ion-col>
     </ion-row>
   </ion-toolbar>

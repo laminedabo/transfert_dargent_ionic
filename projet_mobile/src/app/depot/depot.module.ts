@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MaterialModule } from './../material.module';
+import { MaterialModule } from '../material.module';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CommissionPageRoutingModule } from './commission-routing.module';
+import { DepotPageRoutingModule } from './depot-routing.module';
 
-import { CommissionPage } from './commission.page';
+import { DepotPage } from './depot.page';
 
 @NgModule({
   imports: [
@@ -15,8 +15,8 @@ import { CommissionPage } from './commission.page';
     FormsModule,
     IonicModule,
     MaterialModule,
-    CommissionPageRoutingModule
+    DepotPageRoutingModule
   ],
-  declarations: [CommissionPage]
+  declarations: [DepotPage]
 })
-export class CommissionPageModule {}
+export class DepotPageModule {}

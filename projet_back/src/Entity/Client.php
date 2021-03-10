@@ -9,8 +9,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * @UniqueEntity({"telephone"})
  * @ApiResource(
  *      attributes={
  *          "denormalization_context"={"groups"={"transaction_write"},"enable_max_depth"=true}
@@ -24,20 +26,21 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"transaction_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      * @Assert\NotBlank(message="firstName cannot be empty")
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="lastName cannot be empty")
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $lastName;
 
@@ -49,13 +52,13 @@ class Client
      *     message="Invalid phone number(Ex. 771234567)"
      * )
      * @Assert\NotBlank(message="empty phone number")
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"transaction_write"})
+     * @Groups({"transaction_write","transaction_read"})
      */
     private $IdCard;
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Storage } from '@ionic/storage';
+import { JwtService } from '../services/jwt.service'
 
 @Component({
   selector: 'app-main',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainPage implements OnInit {
 
-  constructor() { }
+  constructor(private storage: Storage, private jwt: JwtService) { }
 
-  ngOnInit() {
+  isAdmin : boolean;
+
+  async ngOnInit() {
+    await this.connect()
+  }
+
+  async connect(){
+    this.storage.get('token').then(
+      (token) => {
+        this.isAdmin = this.jwt.decodeToken(token).roles[0]==='ROLE_ADMINAGENCE'?true:false;
+      }
+    )
   }
 
 }

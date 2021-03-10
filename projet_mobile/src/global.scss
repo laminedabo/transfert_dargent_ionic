@@ -29,3 +29,61 @@
 body{
     --ion-background-color: #faf7f5;
 }
+
+.spinner{
+    position: absolute;
+    top: 30%;
+    left: 46%;
+}
+
+.scrollable_content::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollable_content{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+
+// commun à commission et transaction
+.total_content{
+    text-align: center;
+    border: solid 2px orange; 
+    border-radius: 25px;
+    font-size: large;
+    height: 30px;
+    margin-top: 5px;
+}
+
+.total_text{
+    background-color:orange;
+    color: white;
+    width: 30%;
+    float: left;
+    padding: 3px;
+    border-radius: 25px;
+}
+
+.total_mount{
+    text-align: center;
+    width: 70%;
+    padding: 2.5px;
+    float: right;
+}
+
+.header{
+    border-radius: 0 0 20px 20px;
+    padding: 0 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);;
+    width: 100%;
+    background-color: white;
+}
+
+.arrow_back{
+    float: left;
+    margin-top: 5%;
+    font-size:xx-large;
+    color: #cf92d1;
+    cursor: pointer;
+}

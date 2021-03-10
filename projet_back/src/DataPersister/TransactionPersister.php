@@ -108,32 +108,32 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
         /**
          * Retrait
          */
-        if (preg_match( '/retrait/' , $this->_request->getPathInfo())) {
-            if (!$data = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'))) {
-                return new JsonResponse(['infos'=>'Ce code est invalide']);
-                // return new Response(
-                //     'Ce code est invalide',
-                //     Response::HTTP_NOT_FOUND,
-                //     ['content-type' => 'text/plain']
-                // );
-            }
-            if ($data->getWithdrawer()!==null) {
-                return new JsonResponse(['infos'=>'Cette transaction est déjà validée']);
-            }
-            if ($data->getEtat()==='annulé') {
-                return new JsonResponse(['infos'=>'Cette transaction a été annulée']);
-            }
-            $data->setWithdrawer($user);
-            $data->setEtat('retiré');
-            $data->setRetiredAt(new \DateTime());
-            $compteRetrait = $user ->getAgence() ->getCompte();
+        // if (preg_match( '/retrait/' , $this->_request->getPathInfo())) {
+            // if (!$data = $this->_transact_repo->findOneByCode($this->_request->attributes->get('code'))) {
+            //     return new JsonResponse(['infos'=>'Ce code est invalide']);
+            //     // return new Response(
+            //     //     'Ce code est invalide',
+            //     //     Response::HTTP_NOT_FOUND,
+            //     //     ['content-type' => 'text/plain']
+            //     // );
+            // }
+            // if ($data->getWithdrawer()!==null) {
+            //     return new JsonResponse(['infos'=>'Cette transaction est déjà validée']);
+            // }
+            // if ($data->getEtat()==='annulé') {
+            //     return new JsonResponse(['infos'=>'Cette transaction a été annulée']);
+            // }
+            // $data->setWithdrawer($user);
+            // $data->setEtat('retiré');
+            // $data->setRetiredAt(new \DateTime());
+            // $compteRetrait = $user ->getAgence() ->getCompte();
             
-            $compteRetrait->setSolde($data->getMontant());
-            $data->setCompteRetrait($compteRetrait);
+            // $compteRetrait->setSolde($data->getMontant());
+            // $data->setCompteRetrait($compteRetrait);
 
-             /** Envoi SMS */
-            // $this->_transaction->retraitArgentSMS($data->getSendFrom()->getTelephone(), $data->getSendTO()->getFirstName().' '.$data->getSendTo()->getLastName(),$data->getMontant());
-        }
+            //  /** Envoi SMS */
+            // // $this->_transaction->retraitArgentSMS($data->getSendFrom()->getTelephone(), $data->getSendTO()->getFirstName().' '.$data->getSendTo()->getLastName(),$data->getMontant());
+        // }
 
         /**
          * Annuler un depot non encore retiré
@@ -141,7 +141,9 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
         if (isset($context['item_operation_name']) && $context['item_operation_name']==='cancel_transaction') {
             if (!$data->getWithdrawer()) {
                 $data->setEtat('annulé');
-                $data->getCompte()->setSolde($data->getMontant());
+                $cmptRetrait = $user->getAgence()->getCompte();
+                $data ->setCompteRetrait($cmptRetrait);
+                $cmptRetrait->setSolde($data->getMontant());
             }
             else{
                 return new JsonResponse(['infos'=>'Cette transaction est déjà retirée']);

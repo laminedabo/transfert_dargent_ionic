@@ -1,0 +1,79 @@
+.form-field{
+    width: 100%;
+}
+
+.btn-suivant{
+    width: 75%;
+    height: 55px;
+    margin-left: 12.5%;
+    border-radius: 25px;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.frais{
+    width: 40%;
+    float: right;
+}
+
+.logo{
+    width: 24%;
+    height: 50px;
+    margin-right: 0%;
+}
+
+.person-circle{
+    width: 13%;
+    height: 50px;
+    cursor: pointer;
+}
+
+.login-text{
+    text-align: center;
+    margin-top: 5px;
+}
+
+.line{
+    text-align: center;
+    border-bottom: solid 2px #32a1ce;  
+    max-width: 30%; 
+    margin-top: 5px;
+    margin-left: 35%;
+}
+
+.ic-depot, .person-circle{
+    color: #32a1ce;
+    font-size: larger;
+}
+
+.confirm{
+    color: olive;
+}
+
+.codeRetrait{
+    border: solid 2px #32a1ce; 
+    border-radius: 25px;
+    text-align: center;
+    padding: 3px;
+    font-size: large;
+    height: 40px;
+    margin-top: 20px;
+}
+
+.codeLabel{
+    background-color: rgb(156, 191, 231);
+    width: 30%;
+    float: left;
+    padding: 10px;
+    border-radius: 10px 0 0 10px;
+    margin-top: 5px;
+}
+
+.code{
+    background-color: #32a1ce;
+    width: 70%;
+    padding: 10px;
+    border-radius: 0 10px 10px 0; 
+    margin-top: 5px;
+    float: right;
+}

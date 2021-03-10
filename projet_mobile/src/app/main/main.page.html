@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header no-border class="ion-no-border">
   <div style="text-align:center; margin-top: 20px;">
     <ion-menu-button class="btn-menu" style="float: left;" color="success" slot="start" menu="main-menu"></ion-menu-button>
     <img class="logo" src="../../assets/mobile_money_logo.jpeg" alt="logo">
@@ -19,27 +19,27 @@
 <ion-content>  
 
   <ion-list lines="full">
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item routerLink="/depot" routerDirection="forward">
       <ion-icon class="ic-menu" name="arrow-redo-outline" slot="start"></ion-icon>
       <ion-label>Dépot</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item routerLink="/retrait" routerDirection="forward">
       <ion-icon class="ic-menu" name="arrow-undo-outline" slot="start"></ion-icon>
       <ion-label>Retrait</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item routerLink="/transaction" routerDirection="forward">
       <ion-icon class="ic-menu" name="sync-outline" slot="start"></ion-icon> 
       <ion-label>Mes transactions</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item *ngIf="isAdmin" routerLink="/transaction" routerDirection="forward">
       <ion-icon class="ic-menu" name="repeat-outline" slot="start"></ion-icon>
       <ion-label>Toutes les transactions</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item *ngIf="isAdmin" routerLink="/commission" routerDirection="forward">
       <mat-icon class="ic-menu" slot="start"> money</mat-icon>
       <ion-label>Mes commissions</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item routerLink="/calcul-frais" routerDirection="forward">
       <ion-icon class="ic-menu" name="calculator-outline" slot="start"></ion-icon>
       <ion-label>Calculateur de frais</ion-label>
     </ion-item>

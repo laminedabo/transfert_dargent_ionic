@@ -1,0 +1,32 @@
+.logo{
+    width: 26%;
+    height: 50px;
+    margin-right: 13%;
+}
+
+.mes_tr{
+    display: inline;
+    cursor: pointer;
+}
+
+.ic-money{
+    position: relative;
+    top: 7px;
+    color:  #1093c7;
+}    
+
+.frais_form{
+    margin-top: 30px;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+.line{
+    text-align: center;
+    border-bottom: solid 2px #32a1ce;  
+    max-width: 50%;  
+    margin-left: 25%;
+    margin-top: 5px;
+}

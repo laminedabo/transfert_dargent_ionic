@@ -1,9 +1,71 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>commission</ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border header">
+  <div style="text-align:center; margin-top: 20px;">
+    <ion-icon routerLink="/accueil" class="arrow_back" slot="start" name="arrow-back-sharp"></ion-icon>
+    <img class="logo" src="../../assets/mobile_money_logo.jpeg" alt="logo">
+  </div>
+  <div style="margin-top: 2%; text-align: center;">
+    <div class="mes_tr"><mat-icon class="ic-money" slot="start"> money</mat-icon>Mes Commissions</div>
+    <div class="line"></div>
+  </div>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+
+  <div  class="type" style="text-align:center;">
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select>
+        <ion-select-option value="f">Dépot</ion-select-option>
+        <ion-select-option value="m">Retrait</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+  <div style="display: inline;">
+    <div  class="du" style="float: left;">
+      <ion-item>
+        <ion-label>Du</ion-label>
+        <ion-datetime cancel-text="Annuler"	ok-text="Ok" displayFormat="D MMM YYYY"></ion-datetime>
+      </ion-item>
+    </div>
+
+    <div class="au" style="float: right;">
+      <ion-item>
+        <ion-label>Au</ion-label>
+        <ion-datetime cancel-text="Annuler"	ok-text="Ok" displayFormat="D MMM YYYY"></ion-datetime>
+      </ion-item>
+    </div>
+  </div>
+
+  <div class="scrollable_content" style="width: 100%; height: 350px; overflow:scroll;">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" style="width: 100%;">
+
+      <!-- date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+      </ng-container>
+    
+      <!-- type Column -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Type </th>
+        <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+      </ng-container>
+    
+      <!-- mount Column -->
+      <ng-container matColumnDef="montant">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Montant </th>
+        <td mat-cell *matCellDef="let element"> {{element.montant}} </td>
+      </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+  <div class="total_content">
+    <div class="total_text">Total</div>
+    <div class="total_mount">195860</div>
+  </div>
 
 </ion-content>
