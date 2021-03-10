@@ -8,7 +8,7 @@
       <ion-icon class="ic-menu" name="sync-outline" slot="start"></ion-icon>
       Mes transactions
     </div>
-    <div class="ttes_tr">
+    <div *ngIf="(role$ | async)==='ROLE_ADMINAGENCE'" class="ttes_tr">
       <ion-icon class="ic-menu" name="repeat-outline" slot="start"></ion-icon>
       Toutes transactions
     </div>
@@ -18,7 +18,7 @@
 <ion-content class="ion-padding">
 
   <div style="display: inline;">
-    <div class="users" style="float: left;">
+    <div *ngIf="(role$ | async)==='ROLE_ADMINAGENCE'" class="users" style="float: left;">
       <ion-item>
         <ion-label>Users</ion-label>
         <ion-select>
@@ -28,7 +28,7 @@
       </ion-item>
     </div>
 
-    <div  class="type" style="float: right;">
+    <div [ngClass]="{'width: 100%': (role$ | async)==='ROLE_UTILISATEUR'}"  class="type" style="float: right;">
       <ion-item>
         <ion-label>Type</ion-label>
         <ion-select>
@@ -107,5 +107,7 @@
     <div class="total_text">Total</div>
     <div class="total_mount">15000000</div>
   </div>
+
+  <!-- <div *ngIf="(role$ | async)==='ROLE_ADMINAGENCE'">Role : {{role$ | async}}</div> -->
 
 </ion-content>

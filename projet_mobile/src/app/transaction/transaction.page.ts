@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 export interface PeriodicElement {
   user: string;
@@ -28,7 +30,11 @@ const  ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TransactionPage implements OnInit, AfterViewInit {
 
-  constructor() { }
+  role$: Observable<string>;
+
+  constructor(private store: Store<{ role: string }>) { 
+    this.role$ = store.select('role');
+  }
 
   ngOnInit() {
   }

@@ -17,7 +17,15 @@ use Symfony\Component\Validator\Constraints\Unique;
 
 /**
  * @UniqueEntity({"telephone"})
- * @ApiResource()
+ * @ApiResource(
+ *      itemOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
+ *              "security_message"="Vous n'avez pas ces privileges.",
+ *              "normalization_context"={"groups"={"user_read"}, "enable_max_depth"=true}
+ *          }
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
  */
@@ -27,6 +35,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user_read"})
      */
     private $id;
     

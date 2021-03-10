@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Observable } from 'rxjs';
 import { Storage } from '@ionic/storage';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 
 
@@ -10,10 +11,12 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
+  public base_url = environment.base_url;
+
   constructor(private http: HttpClient, private storage: Storage, private router: Router) { }
 
   login(user: any): Observable<any>{
-    return this.http.post<any>('http://127.0.0.1:8000/api/login_check', user);
+    return this.http.post<any>(`${this.base_url}/login_check`, user);
   }
 
   logout(){

@@ -23,14 +23,23 @@
     <mat-form-field>
       <mat-label>Montant</mat-label>
       <input matInput placeholder="Entrez le montant"  [formControl]="montant" required>
-      <mat-error *ngIf="montant.invalid">Donnez le montant</mat-error>
+      <mat-error *ngIf="montant.hasError('required')">Donnez le montant</mat-error>
+      <mat-error *ngIf="montant.hasError('pattern')">Entrée invalide</mat-error>
     </mat-form-field>
   </div>
 
-  <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
-  
-  <div class="total_content" style="margin-top: 30%; width: 70%; margin-left: 15%;">
-    <div class="total_text">Frais</div>
-    <div class="total_mount">{{frais}}</div>
-  </div>
+  <ng-container  *ngIf="frais$ | async as result" [ngSwitch]="result.dataState">
+    <ng-container *ngSwitchCase="DataStateEnum.LOADING">
+      <ion-spinner class="spinner" name="dots"></ion-spinner>
+    </ng-container>
+    <ng-container *ngSwitchCase="DataStateEnum.ERROR">
+      {{result.errorMessage}}
+    </ng-container>
+    <ng-container *ngSwitchCase="DataStateEnum.LOADED">
+      <div class="total_content" style="margin-top: 30%; width: 70%; margin-left: 15%;">
+        <div class="total_text">Frais</div>
+        <div class="total_mount">{{result.data.frais}}</div>
+      </div>
+    </ng-container>
+  </ng-container>
 </ion-content>

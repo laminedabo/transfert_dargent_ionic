@@ -47,7 +47,6 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
 
     public function getItem(string $resourceClass, $id, string $operationName = null, array $context = []): ?Transaction
     {
-        // Retrieve the blog post item from somewhere then return it or null if not found
         return $this->_transact_repo->find($this->_request->attributes->get('id'));
 
         // return new Transaction($id);
@@ -119,6 +118,5 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
         if($operationName==='user_client_phone'){
             yield $this->_client_repo->findOneByPhone($this->_request->attributes->get('phone'));
         }
-        // yield new Transaction(2);
     }
 }
