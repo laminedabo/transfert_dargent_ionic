@@ -26,4 +26,8 @@ export class HttpService {
   get(url: string){
     return this.http.get(this.base_url+url)
   }
+
+  getTransaction(senderId?, withdrawerId?, compteId?, compteRId?, sendFromId?, sendToId? ){
+    return this.http.get(`${this.base_url}/user/transactions?sender.id=${senderId}&compteRetrait.id=${compteRId}&compte.id=${compteId}`)
+  }
 }

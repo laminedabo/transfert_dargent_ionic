@@ -47,4 +47,18 @@ class CompteRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    
+    public function findUserAccount($idUser): ?Compte
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.agence','a')
+            ->leftJoin('a.utilisateurs','u')
+            ->andWhere('u.id = :val')
+            ->setParameter('val', $idUser)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    
 }

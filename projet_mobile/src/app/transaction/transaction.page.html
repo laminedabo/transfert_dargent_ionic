@@ -18,7 +18,7 @@
 <ion-content class="ion-padding">
 
   <div style="display: inline;">
-    <div *ngIf="(role$ | async)==='ROLE_ADMINAGENCE'" class="users" style="float: left;">
+    <div class="users" style="float: left;">
       <ion-item>
         <ion-label>Users</ion-label>
         <ion-select>
@@ -28,7 +28,7 @@
       </ion-item>
     </div>
 
-    <div [ngClass]="{'width: 100%': (role$ | async)==='ROLE_UTILISATEUR'}"  class="type" style="float: right;">
+    <div class="type" style="float: right;">
       <ion-item>
         <ion-label>Type</ion-label>
         <ion-select>

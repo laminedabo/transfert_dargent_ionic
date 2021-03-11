@@ -32,3 +32,8 @@ services:
 
     App\Services\TransactionCode:
         public: true
+
+    # Login success listener
+    App\EventListener\LoginListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'lexik_jwt_authentication.on_authentication_success', method: onSecurityAuthenticationSuccess }

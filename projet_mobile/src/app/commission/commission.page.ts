@@ -7,6 +7,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Observable, of } from 'rxjs';
 import { AppDataState } from '../state/transaction.state';
+import { Store } from '@ngrx/store';
 
 export interface Transaction {
   retiredAt: Date;
@@ -23,17 +24,21 @@ export interface Transaction {
 export class CommissionPage implements OnInit, AfterViewInit {
 
   ELEMENT_DATA: Transaction[] = []
-  frais$: Observable<AppDataState<Transaction>>;
-  readonly DataStateEnum = DataStateEnum
+  trans$: Observable<AppDataState<Transaction[]>>;
+  readonly DataStateEnum = DataStateEnum;
 
-  constructor(private http: HttpService) { }
+  role$: Observable<string>;
+
+  constructor(private http: HttpService, private store: Store<{ role: string, idUser: string, idCompte: string }>) { 
+    this.role$ = store.select('idCompte');
+  }
 
   ngOnInit() {
-    this.http.get('/admin/compte/transactions').pipe(
+    this.trans$ = this.http.getTransaction(13).pipe(
       map(
         (data) =>({
           dataState: DataStateEnum.LOADED,
-          data: data
+          data: data,
       })),
       startWith({
         dataState: DataStateEnum.LOADING

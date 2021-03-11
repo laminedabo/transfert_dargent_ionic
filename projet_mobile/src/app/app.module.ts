@@ -14,13 +14,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HTTPInterceptorService } from './services/http-interceptor.service';
-import { roleReducer } from './roles/roles.reducer';
+import { idCompteReducer, idUserReducer, roleReducer } from './roles/roles.reducer';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    StoreModule.forRoot({ role: roleReducer }),
+    StoreModule.forRoot({ role: roleReducer, idUser: idUserReducer, idCompte: idCompteReducer }),
     BrowserModule, 
     IonicModule.forRoot(), 
     IonicStorageModule.forRoot(),

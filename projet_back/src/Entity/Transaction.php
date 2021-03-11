@@ -121,7 +121,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          }
  *     },
  * )
- * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "sendFrom.telephone":"exact", "sender.id":"exact", "montant":"exact"})
+ * @ApiFilter(SearchFilter::class, properties={"id": "exact", "code":"exact", "sendAt":"partial", "retiredAt":"partial", "etat":"exact", "sendFrom.telephone":"exact", "sender.id":"exact", "montant":"exact", "compte.id":"exact", "compteRetrait.id":"exact"})
  * @ORM\Entity(repositoryClass=TransactionRepository::class)
  */
 class Transaction extends TransactionCode
