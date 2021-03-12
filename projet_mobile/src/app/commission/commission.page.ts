@@ -8,6 +8,7 @@ import {MatTableDataSource} from '@angular/material/table';
 import { Observable, of } from 'rxjs';
 import { AppDataState } from '../state/transaction.state';
 import { Store } from '@ngrx/store';
+import { ConnectedUser } from '../roles/user.role';
 
 export interface Transaction {
   retiredAt: Date;
@@ -27,10 +28,10 @@ export class CommissionPage implements OnInit, AfterViewInit {
   trans$: Observable<AppDataState<Transaction[]>>;
   readonly DataStateEnum = DataStateEnum;
 
-  role$: Observable<string>;
+  userConn$: Observable<ConnectedUser>;
 
-  constructor(private http: HttpService, private store: Store<{ role: string, idUser: string, idCompte: string }>) { 
-    this.role$ = store.select('idCompte');
+  constructor(private http: HttpService, private store: Store<{ userConnected: ConnectedUser }>) { 
+    this.userConn$ = store.select('userConnected');
   }
 
   ngOnInit() {

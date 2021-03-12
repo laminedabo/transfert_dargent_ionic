@@ -1,32 +1,19 @@
-import { createReducer, on } from '@ngrx/store';
-import { adminAgence, UserAccount, UserAgence, UserId } from './roles.state';
+import { ConnectedUser } from './user.role';
+import { createReducer, on, Action } from '@ngrx/store';
+import { connectedUser } from './roles.action';
  
-export const initialState = '';
+export const initialState: ConnectedUser = {
+  userId: null,
+  accountId: null,
+  role: '',
+  telephone: ''
+};
  
 const _roleReducer = createReducer(
   initialState,
-  on(adminAgence, (state) => 'ROLE_ADMINAGENCE'),
-  on(UserAgence, (state) => 'ROLE_UTILISATEUR'),
+  on(connectedUser, (_state, { user }) => ( user )),
 );
 
-const _IdUserReducer = createReducer(
-  initialState,
-  on(UserId, (state) => state),
-);
-
-const _IdCompteReducer = createReducer(
-  initialState,
-  on(UserAccount, (state) => state),
-);
- 
-export function roleReducer(state: string, action: any) {
+export function roleReducer(state: ConnectedUser, action: Action) {
   return _roleReducer(state, action);
-}
-
-export function idUserReducer(state: string, action: any) {
-  return _IdUserReducer(state, action);
-}
-
-export function idCompteReducer(state: string, action: any) {
-  return _IdCompteReducer(state, action);
 }

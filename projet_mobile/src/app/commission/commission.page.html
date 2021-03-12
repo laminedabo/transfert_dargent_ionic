@@ -68,6 +68,10 @@
     <div class="total_mount">195860</div>
   </div>
 
-    <!-- <div>Role : {{role$ | async}}</div> -->
+    <div>Role : {{userConn$ | async | json}}</div>
+
+    <div *ngIf="userConn$ | async as user">
+      {{user.role}}
+    </div>
 
 </ion-content>

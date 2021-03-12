@@ -1,4 +1,5 @@
-import { adminAgence, UserAccount, UserAgence, UserId } from './../roles/roles.state';
+import { ConnectedUser } from './../roles/user.role';
+import { connectedUser } from '../roles/roles.action';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Storage } from '@ionic/storage';
@@ -14,10 +15,10 @@ import { JwtService } from '../services/jwt.service';
 })
 export class LoginPage implements OnInit {
 
-  role$: Observable<string>;
+  userConn$: Observable<ConnectedUser>;
 
-  constructor(private authservice: AuthService, private storage: Storage, private router: Router, private jwt: JwtService, private store: Store<{ role: string, idUser: string, idCompte: string }>) { 
-    this.role$ = store.select('role');
+  constructor(private authservice: AuthService, private storage: Storage, private router: Router, private jwt: JwtService, private store: Store<{ userConnected: ConnectedUser }>) { 
+    this.userConn$ = store.select('userConnected');
   }
 
   ngOnInit() {
@@ -38,14 +39,13 @@ export class LoginPage implements OnInit {
     this.waiting = true
     this.authservice.login(this.user).subscribe(
       (res: any) =>{
-        if (this.jwt.decodeToken(res.token).roles[0]==='ROLE_ADMINAGENCE') {
-          this.store.dispatch(adminAgence())
+        const thisUser: ConnectedUser = {
+          userId: res.userId,
+          accountId: res.accountId,
+          role: res.role,
+          telephone: res.telephone
         }
-        else if (this.jwt.decodeToken(res.token).roles[0]==='ROLE_UTILISATEUR') {
-          this.store.dispatch(UserAgence())
-        }
-        this.store.dispatch(UserId(res.UserId))
-        this.store.dispatch(UserAccount(res.accountId))
+        this.store.dispatch(connectedUser({user: thisUser}))
         setTimeout(
           ()=>{
             this.storage.set('token', res.token)

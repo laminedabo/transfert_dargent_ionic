@@ -26,6 +26,7 @@ class LoginListener{
         $data['userId'] = $user->getId();
         $data['accountId'] = $account->getId();
         $data['telephone'] = $user->getTelephone();
+        $data['role'] = $user->getRoles()[0];
 
         $event->setData($data);
     }
