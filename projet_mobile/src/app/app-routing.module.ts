@@ -44,6 +44,10 @@ const routes: Routes = [
     path: 'calcul-frais',
     loadChildren: () => import('./calcul-frais/calcul-frais.module').then( m => m.CalculFraisPageModule)
   },
+  {
+    path: 'here-map',
+    loadChildren: () => import('./here-map/here-map.module').then( m => m.HereMapPageModule)
+  },
 ];
 
 @NgModule({

@@ -34,22 +34,37 @@ export class CommissionPage implements OnInit, AfterViewInit {
     this.userConn$ = store.select('userConnected');
   }
 
+  userId = 13;
+  accountId = 4;
   ngOnInit() {
-    this.trans$ = this.http.getTransaction(13).pipe(
-      map(
-        (data) =>({
-          dataState: DataStateEnum.LOADED,
-          data: data,
-      })),
-      startWith({
-        dataState: DataStateEnum.LOADING
-      }),
-      catchError(
-        (error) =>of({
-          dataState: DataStateEnum.ERROR,
-          errorMessage: error.message
-        })
-      )
+    this.userConn$.subscribe(
+      (user: ConnectedUser) =>{
+        // if (user.userId) {
+          this.userId = user.userId;
+          this.trans$ = this.http.getTransaction(this.userId).pipe(
+            map(
+              (data) =>({
+                dataState: DataStateEnum.LOADED,
+                data: data,
+            })),
+            startWith({
+              dataState: DataStateEnum.LOADING
+            }),
+            catchError(
+              (error) =>of({
+                dataState: DataStateEnum.ERROR,
+                errorMessage: error.message
+              })
+            )
+          )
+        // }
+      }
+    )
+
+    this.trans$.subscribe(
+      (trans) =>{
+        console.log(trans.data)
+      }
     )
   }
 
