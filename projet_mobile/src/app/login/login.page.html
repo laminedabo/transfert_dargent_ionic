@@ -30,6 +30,13 @@
 
   <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
 
+  <div style="text-align: center;">
+    <button mat-raised-button class="ion-no-border" [routerLink]="['/here-map']">
+      <ion-icon name="locate-outline" slot="start"></ion-icon>
+      <ion-label>Localiser les agence</ion-label>
+    </button>
+  </div>
+
 </ion-content>
 
 <ion-footer class="ion-padding ion-no-border">

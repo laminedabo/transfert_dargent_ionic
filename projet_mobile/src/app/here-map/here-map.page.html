@@ -1,11 +1,20 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>here-map</ion-title>
-  </ion-toolbar>
+<ion-header class="header">
+  <div style="text-align:center; margin-top: 20px;">
+    <ion-icon routerLink="/accueil" class="arrow_back" slot="start" name="arrow-back-sharp"></ion-icon>
+    <img class="logo" src="../../assets/mobile_money_logo.jpeg" alt="logo">
+    <ion-icon class="person-circle" style="float: right;" name="add-circle-outline" (click)="addMarker()"></ion-icon>
+    <div class="login-text"><ion-icon class="ic-depot" name="arrow-redo-outline" slot="start"></ion-icon>Map</div>
+    <div class="line"></div>
+  </div>
 </ion-header>
 
 <ion-content>
 
   <div style="width: 100%; height: 100%;" id="map_canvas"></div>
 
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="success" (click)="mapOptions()">
+      <ion-icon name="map"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
