@@ -93,20 +93,19 @@ export class DepotPage implements OnInit {
     }
 
     this.alertController.create({
-      header: 'Confirmation',
-      message: 'Vous confirmez ce transfert d\'argent?',
+      header: 'Demande de onfirmation',
+      cssClass:'alertHeader',
+      message: this.Details(),
       buttons: [
         {
           text: 'Revérifier',
           role: 'cancel',
-          cssClass: 'secondary',
           handler: () => {
             console.log('annuler');
           }
         },
         {
           text: 'Confirmer',
-          cssClass: 'confirm',
           handler: () => {
             const transact : any = {
               montant: this.firstFormGroup.value.montant,
@@ -142,6 +141,48 @@ export class DepotPage implements OnInit {
     }).then(res => {
       res.present();
     });
+  }
+
+  Details(): string{
+    const message = `<div>`+
+    `<ion-label>Emétteur</ion-label>`+
+    `</div>`+
+    `<ion-item>`+
+    `<ion-label>${this.firstFormGroup.value.firstName} ${this.firstFormGroup.value.lastName}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Tétéphone</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.firstFormGroup.value.telephone}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>CNI</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.firstFormGroup.value.IdCard}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Montant</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.firstFormGroup.value.montant}</ion-label>`+
+    `</ion-item>`+
+    `<br/><div>`+
+    `<ion-label>Bénéficiaire</ion-label>`+
+    `</div>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.secondFormGroup.value.firstName} ${this.secondFormGroup.value.lastName}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Tétéphone</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.secondFormGroup.value.telephone}</ion-label>`+
+    `</ion-item>`
+
+    return message
+  
   }
 
 }

@@ -48,9 +48,10 @@ export class LoginPage implements OnInit {
         this.store.dispatch(connectedUser({user: thisUser}))
         setTimeout(
           ()=>{
-            this.storage.set('token', res.token)
+            this.storage.set('token', res.token).then(
+              ()=>this.router.navigateByUrl('/accueil')
+            )
             this.waiting = false
-            this.router.navigateByUrl('/accueil')
           }, 1000
         )
       },

@@ -48,6 +48,10 @@ const routes: Routes = [
     path: 'here-map',
     loadChildren: () => import('./here-map/here-map.module').then( m => m.HereMapPageModule)
   },
+  {
+    path: 'user-transaction',
+    loadChildren: () => import('./user-transaction/user-transaction.module').then( m => m.UserTransactionPageModule)
+  },
 ];
 
 @NgModule({

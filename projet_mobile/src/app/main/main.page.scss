@@ -10,20 +10,20 @@ mat-icon, .ic-menu{
 .solde-card{
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     padding: 5px;
-    height: 80px;
+    height: 45%;
     margin-left: 5px;
     margin-right: 5px;
     background-color: white;
 }
 
 .solde-card-header{
-    font-size: 10px;
+    font-size: 100%;
     margin: 0px;
     padding: 0px;
 }
 
 .solde-card-content{
-    font-size: 35px;
+    font-size: 220%;
     color: #32a1ce;  
     height: 40px;
     margin: 0px;
@@ -31,7 +31,7 @@ mat-icon, .ic-menu{
 }
 
 .solde-card-subtitle{
-    font-size: 8px;
+    font-size: 80%;
     font-style: normal;
     margin: 0px;
     padding: 0px;

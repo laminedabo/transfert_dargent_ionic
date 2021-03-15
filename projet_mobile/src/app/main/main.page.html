@@ -9,16 +9,18 @@
       Mon solde disponible
     </ion-card-header>
     <ion-card-content class="solde-card-content">
-      900000F CFA 
-      <ion-icon class="eye-btn" name="eye-off-outline" slot="start"></ion-icon>
+      {{soldeHidden?(solde?solde+'F':0+'F'):'SOLDE'}}
+      <ion-icon *ngIf="soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-off-outline" slot="start"></ion-icon>
+      <ion-icon *ngIf="!soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-outline" slot="start"></ion-icon>
     </ion-card-content>
-    <ion-card-subtitle class="solde-card-subtitle">Mise à jour aujourd'hui à 8h50</ion-card-subtitle>
+    <ion-card-subtitle class="solde-card-subtitle">Mise à jour aujourd'hui à {{date | date: 'shortTime': 'GMT'}}</ion-card-subtitle>
   </ion-card>
 </ion-header>
 
 <ion-content>  
 
-  <ion-list lines="full">
+  <div  class="scrollable_content" style="height: 100%;">
+      <ion-list lines="full">
     <ion-item routerLink="/depot" routerDirection="forward">
       <ion-icon class="ic-menu" name="arrow-redo-outline" slot="start"></ion-icon>
       <ion-label>Dépot</ion-label>
@@ -27,7 +29,7 @@
       <ion-icon class="ic-menu" name="arrow-undo-outline" slot="start"></ion-icon>
       <ion-label>Retrait</ion-label>
     </ion-item>
-    <ion-item routerLink="/transaction" routerDirection="forward">
+    <ion-item routerLink="/user-transaction" routerDirection="forward">
       <ion-icon class="ic-menu" name="sync-outline" slot="start"></ion-icon> 
       <ion-label>Mes transactions</ion-label>
     </ion-item>
@@ -43,15 +45,18 @@
       <ion-icon class="ic-menu" name="calculator-outline" slot="start"></ion-icon>
       <ion-label>Calculateur de frais</ion-label>
     </ion-item>
-    <ion-item routerLink="/here-map" routerDirection="forward">
+    <ion-item *ngIf="isAdmin" routerLink="/here-map" routerDirection="forward">
       <ion-icon class="ic-menu" name="locate-outline" slot="start"></ion-icon>
       <ion-label>Localiser les agences</ion-label>
     </ion-item>
-    <ion-item routerLink="/" routerDirection="forward">
+    <ion-item routerLink="/" (click)="logout()" routerDirection="forward">
       <ion-icon class="ic-menu" name="exit-outline" slot="start"></ion-icon>
       <ion-label>Déconnexion</ion-label>
     </ion-item>
     
   </ion-list>
+  </div>
+
+
 
 </ion-content>

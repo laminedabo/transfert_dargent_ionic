@@ -95,8 +95,8 @@ export class RetraitPage implements OnInit {
 
     this.transaction.sendTo.IdCard = this.firstFormGroup.value.IdCard
     this.alertController.create({
-      header: 'Confirmation',
-      message: 'Vous confirmez ce retrait d\'argent?',
+      header: 'Demande de confirmation',
+      message: this.Details(),
       buttons: [
         {
           text: 'Annuler',
@@ -131,4 +131,45 @@ export class RetraitPage implements OnInit {
     });
   }
 
+
+  Details(): string{
+    const message = `<div>`+
+    `<ion-label>Bénéficiaire</ion-label>`+
+    `</div>`+
+    `<ion-item>`+
+    `<ion-label>${this.transaction.sendTo.firstName} ${this.transaction.sendTo.lastName}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Tétéphone</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.transaction.sendTo.telephone}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>CNI</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.transaction.sendTo.IdCard}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Montant</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.transaction.montant}</ion-label>`+
+    `</ion-item>`+
+    `<br/><div>`+
+    `<ion-label>Emétteur</ion-label>`+
+    `</div>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.transaction.sendFrom.firstName} ${this.transaction.sendFrom.lastName}</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>Tétéphone</ion-label>`+
+    `</ion-item>`+
+    `<ion-item  lines='none'>`+
+    `<ion-label>${this.transaction.sendFrom.telephone}</ion-label>`+
+    `</ion-item>`
+
+    return message
+  }
 }

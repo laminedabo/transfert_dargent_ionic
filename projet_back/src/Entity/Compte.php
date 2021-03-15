@@ -34,8 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "get"={
  *              "path"="/admin/comptes/{id}",
  *              "requirements"={"id"="\d+"},
- *              "normalization_context"={"groups"={"compte_details"},"enable_max_depth"=true},
- *              "security"="is_granted('ROLE_ADMINAGENCE')", 
+ *              "security"="is_granted('ROLE_UTILISATEUR')", 
  *              "security_message"="permission denied.",
  *          },
  *          "rechargement"={

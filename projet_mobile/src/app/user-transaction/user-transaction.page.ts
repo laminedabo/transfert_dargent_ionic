@@ -1,7 +1,8 @@
+import { Component, OnInit } from '@angular/core';
+
 import { map, startWith, catchError } from 'rxjs/operators';
 import { DataStateEnum } from './../state/transaction.state';
 import { HttpService } from './../services/http.service';
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
@@ -11,14 +12,12 @@ import { Store } from '@ngrx/store';
 import { ConnectedUser } from '../roles/user.role';
 import { Transaction } from '../transaction.model';
 
-
-
 @Component({
-  selector: 'app-commission',
-  templateUrl: './commission.page.html',
-  styleUrls: ['./commission.page.scss'],
+  selector: 'app-user-transaction',
+  templateUrl: './user-transaction.page.html',
+  styleUrls: ['./user-transaction.page.scss'],
 })
-export class CommissionPage implements OnInit, AfterViewInit {
+export class UserTransactionPage implements OnInit, AfterViewInit {
 
   ELEMENT_DATA: Transaction[] = []
   trans$: Observable<AppDataState<Transaction[]>>;
@@ -57,7 +56,7 @@ export class CommissionPage implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  getTransactions(compteId, depot='', retrait='', senderId='', withdrawerId='', dateDebut='', dateFin=''){
+  getTransactions(compteId, depot='', retrait='', senderId='13', withdrawerId='', dateDebut='', dateFin=''){
     // if (!compteId) {
     //   return
     // }
@@ -87,7 +86,7 @@ export class CommissionPage implements OnInit, AfterViewInit {
         this.getTransactions(this.accountId, '')
         tab.forEach(
           (trans: Transaction) =>{
-            total_amount+=trans.partDepot
+            total_amount+=trans.montant
           }
         )
         break
@@ -96,7 +95,7 @@ export class CommissionPage implements OnInit, AfterViewInit {
         this.getTransactions('', '',this.accountId)
         tab.forEach(
           (trans: Transaction) =>{
-            total_amount+=trans.partRetrait
+            total_amount+=trans.montant
           }
         )
         break
@@ -105,7 +104,7 @@ export class CommissionPage implements OnInit, AfterViewInit {
         // this.getTransactions(this.accountId)
         tab.forEach(
           (trans: Transaction) =>{
-            total_amount+=trans.partSysteme
+            total_amount+=trans.montant
           }
         )
       }
@@ -118,4 +117,5 @@ export class CommissionPage implements OnInit, AfterViewInit {
     const date: string = data.detail.value.split('T')[0]
     this.getTransactions(this.accountId, '', '','','', date)    
   }
+
 }

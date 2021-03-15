@@ -74,16 +74,22 @@ export class HereMapPage implements OnInit {
   }
 
   ngOnInit() {
-    this.agences.forEach(
-      (agence: Agence) =>{
-        const marker: Marker = this.map.addMarkerSync({
-          title: agence.infos,
-          icon: 'red',
-          animation: 'DROP',
-          position: {lat: agence.lat, lng: agence.lng}
-       });
-      }
-    )
+    if (this.platform.is('cordova')) {
+      this.agences.forEach(
+        (agence: Agence) =>{
+          const marker: Marker = this.map.addMarkerSync({
+            title: agence.infos,
+            icon: 'red',
+            animation: 'DROP',
+            position: {lat: agence.lat, lng: agence.lng}
+         });
+        }
+      )
+    }
+  }
+
+  ngAfterViewInit(){
+    
   }
 
   loadMap() {

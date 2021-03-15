@@ -45,6 +45,10 @@ body{
     scrollbar-width: none;
 }
 
+.scrollable_content{
+    overflow:scroll;
+}
+
 
 // commun à commission et transaction
 .total_content{
