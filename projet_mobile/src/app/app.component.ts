@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 import { Component } from '@angular/core';
 
 @Component({
@@ -6,5 +8,15 @@ import { Component } from '@angular/core';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private platform: Platform, private router: Router) {
+    this.initApp()
+  }
+
+  initApp(){
+    this.platform.ready().then(
+      () =>{
+        this.router.navigateByUrl('splash')
+      }
+    )
+  }
 }

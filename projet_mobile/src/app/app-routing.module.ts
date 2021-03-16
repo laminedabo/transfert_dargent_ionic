@@ -52,6 +52,10 @@ const routes: Routes = [
     path: 'user-transaction',
     loadChildren: () => import('./user-transaction/user-transaction.module').then( m => m.UserTransactionPageModule)
   },
+  {
+    path: 'splash',
+    loadChildren: () => import('./splash/splash.module').then( m => m.SplashPageModule)
+  },
 ];
 
 @NgModule({
