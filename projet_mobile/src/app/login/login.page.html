@@ -7,35 +7,40 @@
     <div class="line"></div>
   </div>
 
-  <form class="ion-padding">
+  <form class="ion-padding" [formGroup]="formGroup">
     <mat-form-field>
       <mat-label>Phone number</mat-label>
-      <input matInput required [(ngModel)]="user.username" [ngModelOptions]="{standalone: true}">
+      <input matInput type="tel" required formControlName="username" placeholder="Format: 771234567">
+      <mat-error
+        *ngIf="formGroup.get('username').hasError('pattern')">
+        Le numéro de téléphone est incorrecte
+      </mat-error>
+      <mat-error
+        *ngIf="formGroup.get('username').hasError('required')">
+        Entrez le numéro de téléphone
+      </mat-error>
       <mat-icon matSuffix>phone</mat-icon>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Password</mat-label>
-      <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="user.password" [ngModelOptions]="{standalone: true}" required>
+      <input matInput formControlName="password" [type]="hide ? 'password' : 'text'" required>
+      <mat-error
+        *ngIf="formGroup.get('password').hasError('required')">
+        Entrez le mot de passe
+      </mat-error>
       <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
       <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
     </mat-form-field>
 
-    <div *ngIf="login_err" class="error-message">Téléphone ou mot de pass incorrecte</div>
+    <div *ngIf="login_err" class="error-message">{{msgError}}</div>
 
       <a class="forget-pw" [routerLink]="['/forgot-password']">Mot de pass oublié?</a>
 
   </form>
 
   <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
-
-  <div style="text-align: center;">
-    <button mat-raised-button class="ion-no-border" [routerLink]="['/here-map']">
-      <ion-icon name="locate-outline" slot="start"></ion-icon>
-      <ion-label>Localiser les agence</ion-label>
-    </button>
-  </div>
 
 </ion-content>
 

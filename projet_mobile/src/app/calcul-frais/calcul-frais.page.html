@@ -15,14 +15,17 @@
     <mat-form-field>
       <mat-label>Type de transaction</mat-label>
       <mat-select>
-        <mat-option selected value="depot">Dépot</mat-option>
-        <mat-option value="retrait">Retrait</mat-option>
+        <mat-option (click)="frais('total')" selected value="depot">Frais total</mat-option>
+        <mat-option (click)="frais('depot')" selected value="depot">Part Dépot</mat-option>
+        <mat-option (click)="frais('retrait')" value="retrait">Part Retrait</mat-option>
+        <mat-option (click)="frais('etat')" value="retrait">Part Etat</mat-option>
+        <mat-option (click)="frais('systeme')" value="retrait">Part Syteme</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Montant</mat-label>
-      <input matInput placeholder="Entrez le montant"  [formControl]="montant" required>
+      <input type="tel" matInput placeholder="Entrez le montant"  [formControl]="montant" required>
       <mat-error *ngIf="montant.hasError('required')">Donnez le montant</mat-error>
       <mat-error *ngIf="montant.hasError('pattern')">Entrée invalide</mat-error>
     </mat-form-field>
@@ -33,12 +36,18 @@
       <ion-spinner class="spinner" name="dots"></ion-spinner>
     </ng-container>
     <ng-container *ngSwitchCase="DataStateEnum.ERROR">
-      {{result.errorMessage}}
+      <div style="text-align: center;">
+        <ion-button disabled color="secondary" shape="round" fill="outline">Une erreur est survenue !!!</ion-button>
+      </div>
     </ng-container>
     <ng-container *ngSwitchCase="DataStateEnum.LOADED">
       <div class="total_content" style="margin-top: 30%; width: 70%; margin-left: 15%;">
         <div class="total_text">Frais</div>
-        <div class="total_mount">{{result.data.frais}}</div>
+        <div *ngIf="typeFr==='total'" class="total_mount">{{result.data.frais}}</div>
+        <div *ngIf="typeFr==='depot'" class="total_mount">{{result.data.frais * 0.1}}</div>
+        <div *ngIf="typeFr==='retrait'" class="total_mount">{{result.data.frais * 0.2}}</div>
+        <div *ngIf="typeFr==='etat'" class="total_mount">{{result.data.etat}}</div>
+        <div *ngIf="typeFr==='systeme'" class="total_mount">{{result.data.systeme}}</div>
       </div>
     </ng-container>
   </ng-container>

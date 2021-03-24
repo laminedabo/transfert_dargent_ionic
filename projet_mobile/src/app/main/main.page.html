@@ -2,14 +2,14 @@
   <div style="text-align:center; margin-top: 20px;">
     <ion-menu-button class="btn-menu" style="float: left;" color="success" slot="start" menu="main-menu"></ion-menu-button>
     <img class="logo" src="../../assets/mobile_money_logo.jpeg" alt="logo">
-    <ion-icon class="person-circle" style="float: right;" name="person-circle-outline"></ion-icon>
+    <ion-icon (click)="myInfos()" class="person-circle" style="float: right;" name="person-circle-outline"></ion-icon>
   </div>
   <ion-card class="solde-card">
     <ion-card-header class="solde-card-header">
       Mon solde disponible
     </ion-card-header>
     <ion-card-content class="solde-card-content">
-      {{soldeHidden?(solde?solde+'F':0+'F'):'SOLDE'}}
+      {{soldeHidden?(solde?solde+'F CFA':0+'F CFA'):'SOLDE MASQUÉ'}}
       <ion-icon *ngIf="soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-off-outline" slot="start"></ion-icon>
       <ion-icon *ngIf="!soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-outline" slot="start"></ion-icon>
     </ion-card-content>
@@ -24,39 +24,45 @@
     <ion-item routerLink="/depot" routerDirection="forward">
       <ion-icon class="ic-menu" name="arrow-redo-outline" slot="start"></ion-icon>
       <ion-label>Dépot</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item routerLink="/retrait" routerDirection="forward">
       <ion-icon class="ic-menu" name="arrow-undo-outline" slot="start"></ion-icon>
       <ion-label>Retrait</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item routerLink="/user-transaction" routerDirection="forward">
       <ion-icon class="ic-menu" name="sync-outline" slot="start"></ion-icon> 
       <ion-label>Mes transactions</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item *ngIf="isAdmin" routerLink="/transaction" routerDirection="forward">
       <ion-icon class="ic-menu" name="repeat-outline" slot="start"></ion-icon>
       <ion-label>Toutes les transactions</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item *ngIf="isAdmin" routerLink="/commission" routerDirection="forward">
       <mat-icon class="ic-menu" slot="start"> money</mat-icon>
       <ion-label>Mes commissions</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item routerLink="/calcul-frais" routerDirection="forward">
       <ion-icon class="ic-menu" name="calculator-outline" slot="start"></ion-icon>
       <ion-label>Calculateur de frais</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item *ngIf="isAdmin" routerLink="/here-map" routerDirection="forward">
       <ion-icon class="ic-menu" name="locate-outline" slot="start"></ion-icon>
       <ion-label>Localiser les agences</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     <ion-item routerLink="/" (click)="logout()" routerDirection="forward">
       <ion-icon class="ic-menu" name="exit-outline" slot="start"></ion-icon>
       <ion-label>Déconnexion</ion-label>
+      <ion-icon style="color: #FA4A0C;" name="chevron-forward-outline"></ion-icon>
     </ion-item>
     
   </ion-list>
   </div>
-
-
 
 </ion-content>

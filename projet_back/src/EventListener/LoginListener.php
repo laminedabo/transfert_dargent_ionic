@@ -24,7 +24,9 @@ class LoginListener{
 
         $account = $this->compte_repo->findUserAccount($user->getId());
         $data['userId'] = $user->getId();
-        $data['accountId'] = $account->getId();
+        if ($account!==null) {
+            $data['accountId'] = $account->getId();
+        }
         $data['telephone'] = $user->getTelephone();
         $data['role'] = $user->getRoles()[0];
 

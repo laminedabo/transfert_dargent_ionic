@@ -4,16 +4,12 @@
     margin-right: 13%;
 }
 
-.mes_tr, .ttes_tr{
+.ttes_tr{
     display: inline;
     cursor: pointer;
     padding-bottom: 6px;
-    border-bottom: solid 2px #1093c7;  
 }
 
-.ttes_tr{
-    float: right;
-}
 
 .users, .type, .du, .au{
     width: 50%;
@@ -25,4 +21,17 @@ mat-form-field{
     width: 90%;
     margin-left: 5%;
     margin-top: 3%;
+}
+
+.line{
+    text-align: center;
+    border-bottom: solid 2px #32a1ce;  
+    max-width: 52%;  
+    margin-left: 24%;
+    margin-top: 5px;
+}
+
+.ic-depot{
+    color: #32a1ce;
+    font-size: larger;
 }

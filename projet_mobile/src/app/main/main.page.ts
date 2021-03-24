@@ -6,6 +6,7 @@ import { Storage } from '@ionic/storage';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { JwtService } from '../services/jwt.service'
+import { ToastService } from '../services/toast.service';
 
 @Component({
   selector: 'app-main',
@@ -15,13 +16,15 @@ import { JwtService } from '../services/jwt.service'
 export class MainPage implements OnInit {
 
   userConn$: Observable<ConnectedUser>;
-  constructor(private storage: Storage, private jwt: JwtService, private auth: AuthService, private httpService: HttpService, private store: Store<{ userConnected: ConnectedUser }>) { 
+  constructor(private storage: Storage, private toast: ToastService, private jwt: JwtService, private auth: AuthService, private httpService: HttpService, private store: Store<{ userConnected: ConnectedUser }>) { 
     this.userConn$ = store.select('userConnected');
+    
   }
 
   isAdmin : boolean;
   solde = 0.0
   date = new Date
+  accountId = null
 
   async ngOnInit() {
     await this.connect()
@@ -30,6 +33,7 @@ export class MainPage implements OnInit {
         this.httpService.get(`/admin/comptes/${user.accountId}`).subscribe(
           (compte: any) =>{
             this.solde = compte.solde
+            this.accountId = compte.id
           }
         )
       }
@@ -47,9 +51,21 @@ export class MainPage implements OnInit {
   soldeHidden: boolean = false
   hideSolde(){
     this.soldeHidden = !this.soldeHidden
+    if(this.accountId !== null){
+      this.httpService.get(`/admin/comptes/${this.accountId}`).subscribe(
+        (compte: any) =>{
+          this.solde = compte.solde
+          this.date = new Date
+        }
+      )
+    }
   }
 
   logout(){
     this.auth.logout()
+  }
+
+  myInfos(){
+    this.toast.presentToast('success', 'Dev By Lamine Dabo @LDabDev')
   }
 }

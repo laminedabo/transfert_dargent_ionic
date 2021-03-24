@@ -13,6 +13,10 @@ import {
   Environment
 } from '@ionic-native/google-maps';
 
+import { Plugins } from '@capacitor/core';
+
+const { Device } = Plugins;
+
 export interface Agence{
   id: number,
   infos: string,
@@ -68,13 +72,15 @@ export class HereMapPage implements OnInit {
     public actionCtrl: ActionSheetController,
     private platform: Platform
   ) { 
-    if (this.platform.is('cordova')) {
+    // if (this.platform.is('hybrid') || this.platform.is('cordova')) {
       this.loadMap();
-    }
+    // }
   }
 
-  ngOnInit() {
-    if (this.platform.is('cordova')) {
+  async ngOnInit() {
+    const info = await Device.getInfo();
+    console.log(info);
+    // if (this.platform.is('hybrid') || this.platform.is('cordova')) {
       this.agences.forEach(
         (agence: Agence) =>{
           const marker: Marker = this.map.addMarkerSync({
@@ -85,7 +91,7 @@ export class HereMapPage implements OnInit {
          });
         }
       )
-    }
+    // }
   }
 
   ngAfterViewInit(){

@@ -156,7 +156,7 @@ class Compte
 
     public function setSolde(float $solde): self
     {
-        $this->solde = $this->solde + abs($solde);
+        $this->solde = abs($solde);
 
         return $this;
     }

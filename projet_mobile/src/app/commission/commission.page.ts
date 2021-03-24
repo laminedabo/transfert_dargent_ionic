@@ -1,8 +1,8 @@
 import { map, startWith, catchError } from 'rxjs/operators';
 import { DataStateEnum } from './../state/transaction.state';
 import { HttpService } from './../services/http.service';
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import {AfterViewInit, ViewChild} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, ViewChild, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Observable, of } from 'rxjs';
@@ -30,8 +30,8 @@ export class CommissionPage implements OnInit, AfterViewInit {
     this.userConn$ = store.select('userConnected');
   }
 
-  userId = 13;
-  accountId = '4';
+  userId = null;
+  accountId = null;
   total_amount = 0;
   dateDebut = '';
   dateFin = '';
@@ -39,11 +39,11 @@ export class CommissionPage implements OnInit, AfterViewInit {
   ngOnInit() {
     this.userConn$.subscribe(
       (user: ConnectedUser) =>{
-        // if (user.userId) {
+        if (user.userId !==null) {
           this.userId = user.userId;
-          // this.accountId = user.accountId,
+          this.accountId = user.accountId,
           this.getTransactions(this.accountId)
-        // }
+        }
       }
     )
   }
@@ -58,7 +58,7 @@ export class CommissionPage implements OnInit, AfterViewInit {
   }
 
   getTransactions(compteId, depot='', retrait='', senderId='', withdrawerId='', dateDebut='', dateFin=''){
-    // if (!compteId) {
+    // if (compteId === null) {
     //   return
     // }
     this.trans$ = null;

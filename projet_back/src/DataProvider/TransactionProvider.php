@@ -101,7 +101,7 @@ final class TransactionProvider implements ItemDataProviderInterface,ContextAwar
             $frais=null;
             $montant = $this->_request->attributes->get('montant');
             if (is_numeric($montant)) {
-                $frais = $this->_transaction->frais($montant)['frais'];
+                $frais = $this->_transaction->frais($montant);
             }
             yield 'frais'=>$frais;
         }

@@ -28,6 +28,6 @@ export class HttpService {
   }
 
   getTransactions(compteId, depot?, retrait?, senderId?, withdrawerId?, dateDebut?, dateFin?){
-    return this.http.get(`${this.base_url}/user/transactions?sender.id=${senderId}&compte.id=${compteId}&compteDepot.id=${depot}&compteRetrait.id=${retrait}&sendAt=${dateDebut}&retiredAt=${dateFin}`)
+    return this.http.get(`${this.base_url}/user/transactions?sender.id=${senderId}&compte.id=${compteId}&compteDepot.id=${depot}&compteRetrait.id=${retrait}`)
   }
 }

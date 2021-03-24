@@ -17,6 +17,9 @@
     </ng-container>
     <ng-container *ngSwitchCase="DataStateEnum.ERROR">
       {{result.errorMessage}}
+      <div style="text-align: center;">
+        <ion-button disabled color="secondary" shape="round" fill="outline">Une erreur est survenue !!!</ion-button>
+      </div>
     </ng-container>
     <ng-container *ngSwitchCase="DataStateEnum.LOADED">
       <div  class="type" style="text-align:center;">

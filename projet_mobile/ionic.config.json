@@ -1,8 +1,7 @@
 {
-  "name": "projet_mobile",
+  "name": "Dabo",
   "integrations": {
-    "capacitor": {},
-    "cordova": {}
+    "capacitor": {}
   },
   "type": "angular"
 }

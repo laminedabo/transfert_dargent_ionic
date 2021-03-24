@@ -1,5 +1,5 @@
 import { DataStateEnum } from './../state/transaction.state';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { HttpService } from '../services/http.service';
@@ -7,7 +7,10 @@ import { AppDataState } from '../state/transaction.state';
 import { map, startWith, catchError } from 'rxjs/operators';
 
 export interface Frais {
-  frais: number
+  frais: number,
+  etat: number,
+  systeme: number,
+  agence: number
 } 
 @Component({
   selector: 'app-calcul-frais',
@@ -24,9 +27,9 @@ export class CalculFraisPage implements OnInit {
   readonly DataStateEnum = DataStateEnum;
   getData(montant: number){
     this.frais$ = this.http.get(`/user/${montant}/frais`).pipe(
-      map( (data)=> ({
+      map( (data: any)=> ({
         dataState: DataStateEnum.LOADED,
-        data: data
+        data: data.frais
       })),
       startWith({
         dataState: DataStateEnum.LOADING
@@ -46,6 +49,11 @@ export class CalculFraisPage implements OnInit {
         this.getData(mnt)
       }
     })
+  }
+
+  typeFr = 'total'
+  frais(type: string){
+    this.typeFr = type
   }
 
 }

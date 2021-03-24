@@ -29,8 +29,8 @@ export class UserTransactionPage implements OnInit, AfterViewInit {
     this.userConn$ = store.select('userConnected');
   }
 
-  userId = 13;
-  accountId = '4';
+  userId = null;
+  accountId = null;
   total_amount = 0;
   dateDebut = '';
   dateFin = '';
@@ -38,11 +38,11 @@ export class UserTransactionPage implements OnInit, AfterViewInit {
   ngOnInit() {
     this.userConn$.subscribe(
       (user: ConnectedUser) =>{
-        // if (user.userId) {
+        if (user.userId != null) {
           this.userId = user.userId;
-          // this.accountId = user.accountId,
+          this.accountId = user.accountId,
           this.getTransactions(this.accountId)
-        // }
+        }
       }
     )
   }
@@ -56,8 +56,8 @@ export class UserTransactionPage implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  getTransactions(compteId, depot='', retrait='', senderId='13', withdrawerId='', dateDebut='', dateFin=''){
-    // if (!compteId) {
+  getTransactions(compteId, depot='', retrait='', senderId='', withdrawerId='', dateDebut='', dateFin=''){
+    // if (!compteId === null) {
     //   return
     // }
     this.trans$ = null;
@@ -83,19 +83,27 @@ export class UserTransactionPage implements OnInit, AfterViewInit {
     var total_amount = 0;
     switch(type){
       case 'depot':{
-        this.getTransactions(this.accountId, '')
-        tab.forEach(
-          (trans: Transaction) =>{
-            total_amount+=trans.montant
+        this.getTransactions(this.accountId, this.accountId)
+        this.trans$.subscribe(
+          (transa)=>{
+            transa.data.forEach(
+              (trans: Transaction) =>{
+                total_amount+=trans.montant
+              }
+            )
           }
         )
         break
       }
       case 'retrait':{
         this.getTransactions('', '',this.accountId)
-        tab.forEach(
-          (trans: Transaction) =>{
-            total_amount+=trans.montant
+        this.trans$.subscribe(
+          (transa)=>{
+            transa.data.forEach(
+              (trans: Transaction) =>{
+                total_amount+=trans.montant
+              }
+            )
           }
         )
         break

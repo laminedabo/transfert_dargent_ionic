@@ -16,16 +16,20 @@
         <ng-template matStepLabel>Emétteur</ng-template>
         <mat-form-field class="form-field">
           <mat-label>N° CNI</mat-label>
-          <input matInput placeholder="N° carte d'identité" formControlName="IdCard" required>
+          <input type="tel" matInput placeholder="N° carte d'identité" formControlName="IdCard" required>
         <mat-error
           *ngIf="firstFormGroup.get('IdCard').hasError('required')">
           Le CIN est requis
+        </mat-error>
+        <mat-error
+          *ngIf="firstFormGroup.get('IdCard').hasError('pattern')">
+          Commence par 1 ou 2. longueur min: 9 longueur max: 15
         </mat-error>
         </mat-form-field>
 
         <mat-form-field class="form-field">
           <mat-label>Nom</mat-label>
-          <input matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
+          <input [disabled]="emetFound" matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
           <mat-error
           *ngIf="firstFormGroup.get('firstName').hasError('required')">
           Le nom est requis
@@ -34,7 +38,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Prénom</mat-label>
-          <input matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
+          <input [disabled]="emetFound" matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
           <mat-error
           *ngIf="firstFormGroup.get('lastName').hasError('required')">
           Le prénom est requis
@@ -43,7 +47,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Téléphone</mat-label>
-          <input matInput placeholder="Format: 771234567" formControlName="telephone" required>
+          <input [disabled]="emetFound" type="tel" matInput placeholder="Format: 771234567" formControlName="telephone" required>
           <mat-error
           *ngIf="firstFormGroup.get('telephone').hasError('required')">
           Le téléphone est requis
@@ -56,7 +60,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Montant</mat-label>
-          <input matInput  placeholder="La somme sans les frais" formControlName="montant" required>
+          <input type="tel" matInput  placeholder="La somme sans les frais" formControlName="montant" required>
           <mat-error
             *ngIf="firstFormGroup.get('montant').hasError('required')">
             Le montant est requis
@@ -87,7 +91,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Téléphone</mat-label>
-          <input matInput placeholder="Format: 771234567" formControlName="telephone" required>
+          <input type="tel" matInput placeholder="Format: 771234567" formControlName="telephone" required>
           <mat-error
             *ngIf="secondFormGroup.get('telephone').hasError('pattern')">
             Le téléphone est incorrecte
@@ -100,7 +104,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Nom</mat-label>
-          <input matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
+          <input [disabled]="benefFound" matInput placeholder="Tapez le nom de famille" formControlName="firstName" required>
           <mat-error
             *ngIf="secondFormGroup.get('firstName').hasError('required')">
             Le nom est requis
@@ -109,7 +113,7 @@
 
         <mat-form-field class="form-field">
           <mat-label>Prénom</mat-label>
-          <input matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
+          <input [disabled]="benefFound" matInput placeholder="Tapez le Prénom" formControlName="lastName" required>
           <mat-error
             *ngIf="secondFormGroup.get('lastName').hasError('required')">
             Le prénom est requis
@@ -128,6 +132,8 @@
       </div>
     </mat-step>
   </mat-horizontal-stepper>
+
+  <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
 
 </ion-content>
 

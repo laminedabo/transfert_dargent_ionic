@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "projet_mobile",
+  "appName": "Dabo",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
@@ -9,10 +9,5 @@
       "launchShowDuration": 0
     }
   },
-  "cordova": {},
-  "linuxAndroidStudioPath": "/snap/bin/android-studio",
-  "server": {
-    "url": "http://192.168.1.119:8101",
-    "cleartext": true
-  }
+  "linuxAndroidStudioPath": "/snap/bin/android-studio"
 }

@@ -17,10 +17,7 @@ class UserFixtures extends Fixture
         $faker = Factory::create('fr_FR');
         for ($j=0; $j < 5; $j++) {
             $user = new User();
-            if ($j===0) {
-                $user -> setRoles("ROLE_ADMINSYSTEME");
-            }
-            elseif($j<4) {
+            if($j<4 && $j>0) {
                 $agence = new Agence();
                 $compte = new Compte();
                 $utilisateur = new User();
@@ -30,9 +27,10 @@ class UserFixtures extends Fixture
                 $agence->setTelephone('77'.substr(str_shuffle(str_repeat($x='0123456789', ceil(7/strlen($x)) )),1,7));
                 $agence->setLattitude($faker->latitude());
                 $agence->setLongitude($faker->longitude());
-                $agence->addAdmin($user);
+                $agence->setAdministrateur($user);
+                $agence->addUtilisateur($user);
                 $compte->setSolde(3000000);
-                $agence->addCompte($compte);
+                $agence->setCompte($compte);
                 $utilisateur -> setRoles("ROLE_UTILISATEUR");
                 $utilisateur = $this->setCommon($utilisateur); 
                 $manager -> persist($utilisateur);
@@ -40,11 +38,16 @@ class UserFixtures extends Fixture
                 $manager -> persist($agence);
                 $manager -> persist($compte);
             }
-            else {
+            
+            if ($j===4) {
                 $user -> setRoles("ROLE_CAISSIER");
             }       
 
             $user = $this->setCommon($user);               
+            if ($j===0) {
+                $user -> setRoles("ROLE_ADMINSYSTEME");
+                $user -> setTelephone('771234567');
+            }             
             $manager -> persist($user);   
         }
             

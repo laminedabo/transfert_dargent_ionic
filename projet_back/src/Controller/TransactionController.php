@@ -54,7 +54,7 @@ class TransactionController extends AbstractController
         $data->setRetiredAt(new \DateTime());
         $compteRetrait = $user ->getAgence() ->getCompte();
         
-        $compteRetrait->setSolde($data->getMontant());
+        $compteRetrait->setSolde($compteRetrait->getSolde()+$data->getMontant());
         $data->setCompteRetrait($compteRetrait);
 
         if ($from = $client_repo->findOneByIdCard($data->getSendFrom()->getIdCard())) {

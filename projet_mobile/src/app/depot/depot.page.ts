@@ -1,3 +1,5 @@
+import { SharedVariablesService } from './../services/shared-variables.service';
+import { Router } from '@angular/router';
 import { HttpService } from './../services/http.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -18,32 +20,37 @@ export class DepotPage implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService) { }
+  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService, private router: Router, private share: SharedVariablesService) { }
 
   frais = 0;
   total = 0;
+  waiting: boolean = false;
+  emetFound: boolean = false
+  benefFound: boolean = false
 
   ngOnInit() {
     this.firstFormGroup = this._formBuilder.group({
-      IdCard: ['', Validators.required],
+      IdCard: ['', [Validators.required, Validators.pattern('[12][0-9]{9,15}')]],
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      telephone: ['', Validators.required],
-      montant: ['', Validators.required],
+      telephone: ['', [Validators.required, Validators.pattern('((7[76085][0-9]{7}$)|(3[03][98][0-9]{6}$))')]],
+      montant: ['', [Validators.required, Validators.pattern('[0-9]*')]],
     });
     this.secondFormGroup = this._formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      telephone: ['', Validators.required]
+      telephone: ['', [Validators.required, Validators.pattern('((7[76085][0-9]{7}$)|(3[03][98][0-9]{6}$))')]]
     });
     
     this.firstFormGroup.get("montant").valueChanges.subscribe(mnt => {
       if (Number(mnt) && mnt>0 && mnt.trim()!=='') {
-        this.total = mnt
+        this.total = mnt;
+        this.waiting = !this.waiting
         this.http.get(`/user/${mnt}/frais`).subscribe(
           (res:any)=>{
-            this.frais = res.frais
-            this.total = +mnt+(+res.frais)
+            this.frais = res.frais.frais
+            this.total = +mnt+(+res.frais.frais)
+            this.waiting = !this.waiting
           }
         ) 
       }
@@ -55,13 +62,22 @@ export class DepotPage implements OnInit {
 
     this.firstFormGroup.get("IdCard").valueChanges.subscribe((id:string) => {
       if (id!==null && id.trim()!=='' && id.length >=10) {
+        this.waiting = !this.waiting
         this.http.get(`/user/client/nci/${id}`).subscribe(
           (res:any)=>{
+            this.waiting = !this.waiting
             if (res[0] !== null) {
               this.toast.presentToast('dark', 'Un résultat trouvé')
               this.firstFormGroup.get("firstName").setValue(res[0].firstName)
               this.firstFormGroup.get("lastName").setValue(res[0].lastName)
               this.firstFormGroup.get("telephone").setValue(res[0].telephone)
+              this.emetFound = true
+            }
+            else{
+              this.firstFormGroup.get("firstName").reset()
+              this.firstFormGroup.get("lastName").reset()
+              this.firstFormGroup.get("telephone").reset()
+              this.emetFound = false
             }
           }
         ) 
@@ -70,12 +86,19 @@ export class DepotPage implements OnInit {
 
     this.secondFormGroup.get("telephone").valueChanges.subscribe((phone:string) => {
       if (phone !==null && phone.trim()!=='' && phone.length ==9) {
+        this.waiting = !this.waiting
         this.http.get(`/user/client/phone/${phone}`).subscribe(
           (res:any)=>{
+            this.waiting = !this.waiting
             if (res[0] !== null) {
               this.toast.presentToast('dark', 'Un résultat trouvé')
               this.secondFormGroup.get("firstName").setValue(res[0].firstName)
               this.secondFormGroup.get("lastName").setValue(res[0].lastName)
+              this.benefFound = true
+            }
+            else{
+              // this.secondFormGroup.reset()
+              this.benefFound = false
             }
           }
         ) 
@@ -122,14 +145,17 @@ export class DepotPage implements OnInit {
               }  
             }
             transact.montant = Number(transact.montant)
+            this.waiting = true
             this.http.post('/user/compte/depot', transact).subscribe(
               (res:any) => {
-                console.log(res)
+                this.waiting = false
                 this.firstFormGroup.reset()
                 this.secondFormGroup.reset()
                 this.code = res.code;
                 this.showCode = true;
                 this.toast.presentToast('success', 'Opération réussie')
+                this.share.setValue(-transact.montant)
+                // setTimeout(function(){ this.router.navigateByUrl('/accueil'); }, 3000); 
               },
               error =>{
                 alert('error occured')

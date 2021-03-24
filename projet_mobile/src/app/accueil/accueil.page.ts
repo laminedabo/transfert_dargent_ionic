@@ -17,11 +17,9 @@ export class AccueilPage implements OnInit {
 
   async ngOnInit() {
     await this.connect()
-    console.log('ok')
   }
 
   async connect(){
-    console.log('ko')
     this.storage.get('token').then(
       (token) => {
         this.isAdmin = this.jwt.decodeToken(token).roles[0]==='ROLE_ADMINAGENCE'?true:false;

@@ -13,10 +13,14 @@
   <div [formGroup]="firstFormGroup" class="code">
     <mat-form-field class="form-field">
       <mat-label>Code de retrait</mat-label>
-      <input matInput [(ngModel)]="code" placeholder="Format: 123-456-789" formControlName="codeRetrait" required>
+      <input type="tel" matInput [(ngModel)]="code" placeholder="Format: 123-456-789 ou 123456789" formControlName="codeRetrait" required>
     <mat-error
       *ngIf="firstFormGroup.get('codeRetrait').hasError('required')">
       Entrez le code de retrait
+    </mat-error>
+    <mat-error
+      *ngIf="firstFormGroup.get('codeRetrait').hasError('pattern')">
+      Entrée invalide. Format: 123-456-789 ou 123456789
     </mat-error>
     </mat-form-field>
     <ion-spinner *ngIf="waiting" class="spinner" name="dots"></ion-spinner>
@@ -29,12 +33,16 @@
     <mat-step [stepControl]="firstFormGroup" errorMessage="Erreur(s)">
       <form [formGroup]="firstFormGroup">
         <ng-template matStepLabel>Bénéficiaire</ng-template>
-        <mat-form-field class="form-field">
+        <mat-form-field *ngIf="codeSuccess" class="form-field">
           <mat-label>Entrez le N° CNI</mat-label>
-          <input [disabled]="codeSuccess" matInput placeholder="N° carte d'identité" formControlName="IdCard" required>
+          <input type="tel"  minlength="9" [disabled]="codeSuccess" matInput placeholder="N° carte d'identité" formControlName="IdCard" required>
         <mat-error
           *ngIf="firstFormGroup.get('IdCard').hasError('required')">
           Le CIN est requis
+        </mat-error>
+        <mat-error
+          *ngIf="firstFormGroup.get('IdCard').hasError('pattern')">
+          Commence par 1 ou 2. longueur min: 9 longueur max: 15
         </mat-error>
         </mat-form-field>
 
@@ -56,7 +64,7 @@
   
           <div class="infos_client">
             <div class="labels">DATE D'ENVOI</div>
-            <div class="values">{{date | date:'dd/MM/yyyy à hh:mm'}}</div>
+            <div class="values">{{date | date:'medium' }}</div>
             
           </div>
         </div>
@@ -93,7 +101,7 @@
 
         <div class="infos_client">
           <div class="labels">DATE D'ENVOI</div>
-          <div class="values">{{date | date:'dd/MM/yyyy à hh:mm'}}</div>
+          <div class="values">{{date | date:'medium' }}</div>
         </div>
       </div>
       
