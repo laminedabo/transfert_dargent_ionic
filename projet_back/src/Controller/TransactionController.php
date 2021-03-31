@@ -55,6 +55,7 @@ class TransactionController extends AbstractController
         $compteRetrait = $user ->getAgence() ->getCompte();
         
         $compteRetrait->setSolde($compteRetrait->getSolde()+$data->getMontant());
+        $solde = $compteRetrait->getSolde();
         $data->setCompteRetrait($compteRetrait);
 
         if ($from = $client_repo->findOneByIdCard($data->getSendFrom()->getIdCard())) {
@@ -71,6 +72,6 @@ class TransactionController extends AbstractController
         $manager->persist($data);
         $manager->flush();
 
-        return $this->json(['infos'=>'Opération reussie'], 200);
+        return $this->json(['infos'=>'Opération reussie', 'solde'=>$solde], 200);
     }
 }

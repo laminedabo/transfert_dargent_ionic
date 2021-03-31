@@ -1,5 +1,6 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
+import { soldeReducer } from './solde/solde.reducers';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -24,7 +25,7 @@ registerLocaleData(localeFr, 'fr');
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
-    StoreModule.forRoot({ userConnected: roleReducer }),
+    StoreModule.forRoot({ userConnected: roleReducer, solde: soldeReducer }),
     BrowserModule, 
     IonicModule.forRoot(), 
     IonicStorageModule.forRoot(),
@@ -33,7 +34,7 @@ registerLocaleData(localeFr, 'fr');
     MaterialModule,
     HttpClientModule,
     JwtModule
-],
+  ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: LOCALE_ID, useValue: 'fr' },

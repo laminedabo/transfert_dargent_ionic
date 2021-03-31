@@ -2,12 +2,14 @@ import { SharedVariablesService } from './../services/shared-variables.service';
 import { Router } from '@angular/router';
 import { HttpService } from './../services/http.service';
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../services/toast.service'
 import { DepotRetraitTransaction } from '../transaction.model';
+import { soldeUpdate } from '../solde/solde.actions';
 
 @Component({
   selector: 'app-retrait',
@@ -21,7 +23,7 @@ export class RetraitPage implements OnInit {
 
   firstFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService, private router: Router, private share: SharedVariablesService) { }
+  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService, private router: Router, private store: Store<{ solde: number }>) { }
 
   code: string = ''
   montant: any;
@@ -108,8 +110,8 @@ export class RetraitPage implements OnInit {
             this.http.put(`/user/retrait/${this.transaction.id}`, this.transaction).subscribe(
               async (res:any) => {
                 console.log(res)
+                this.store.dispatch(soldeUpdate({solde: res.solde}))
                 this.toast.presentToast('dark', 'Opération réussie');
-                this.share.setValue(this.montant)
                 this.firstFormGroup.reset();
                 this.codeSuccess = false;
                 this.waiting = false;

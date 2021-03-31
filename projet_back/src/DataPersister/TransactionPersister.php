@@ -72,6 +72,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
         /** Les infos de l'utilisateur connecté */
         $user = $this->_security -> getUser();
         $idCmpte = $user->getAgence()->getCompte()->getId();
+        $solde = null;
 
         /**
          * Depot
@@ -83,6 +84,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
             }
 
             $data->setCompte($account);
+            $solde = $account->getSolde()-$data->getMontant();
             $account->setSolde($account->getSolde()-$data->getMontant());
 
             $partAgence = $this->_transaction->frais($data->getMontant())['frais'];
@@ -153,7 +155,7 @@ class TransactionPersister implements ContextAwareDataPersisterInterface
         // dd($data);
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
-        return $data;
+        return new JsonResponse(['code'=>$data->getCode(), 'solde'=>$solde]);
     }
 
     /**

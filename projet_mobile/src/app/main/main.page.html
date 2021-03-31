@@ -8,7 +8,7 @@
     <ion-card-header class="solde-card-header">
       Mon solde disponible
     </ion-card-header>
-    <ion-card-content class="solde-card-content">
+    <ion-card-content *ngIf="solde$ | async as solde" class="solde-card-content">
       {{soldeHidden?(solde?solde+'F CFA':0+'F CFA'):'SOLDE MASQUÉ'}}
       <ion-icon *ngIf="soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-off-outline" slot="start"></ion-icon>
       <ion-icon *ngIf="!soldeHidden" (click)="hideSolde()" class="eye-btn" name="eye-outline" slot="start"></ion-icon>

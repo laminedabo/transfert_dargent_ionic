@@ -7,6 +7,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {STEPPER_GLOBAL_OPTIONS} from '@angular/cdk/stepper';
 import { AlertController } from '@ionic/angular';
 import { ToastService } from '../services/toast.service'
+import { Store } from '@ngrx/store';
+import { soldeUpdate } from '../solde/solde.actions';
 
 @Component({
   selector: 'app-depot',
@@ -20,7 +22,7 @@ export class DepotPage implements OnInit {
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService, private router: Router, private share: SharedVariablesService) { }
+  constructor(private _formBuilder: FormBuilder, public alertController: AlertController, private http: HttpService, public toast: ToastService, private router: Router, private store: Store<{ solde: number }>) { }
 
   frais = 0;
   total = 0;
@@ -154,7 +156,7 @@ export class DepotPage implements OnInit {
                 this.code = res.code;
                 this.showCode = true;
                 this.toast.presentToast('success', 'Opération réussie')
-                this.share.setValue(-transact.montant)
+                this.store.dispatch(soldeUpdate({solde: res.solde}))
                 // setTimeout(function(){ this.router.navigateByUrl('/accueil'); }, 3000); 
               },
               error =>{

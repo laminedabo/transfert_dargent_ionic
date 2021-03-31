@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { JwtService } from '../services/jwt.service'
 import { ToastService } from '../services/toast.service';
+import { soldeUpdate } from '../solde/solde.actions';
 
 @Component({
   selector: 'app-main',
@@ -16,13 +17,14 @@ import { ToastService } from '../services/toast.service';
 export class MainPage implements OnInit {
 
   userConn$: Observable<ConnectedUser>;
-  constructor(private storage: Storage, private toast: ToastService, private jwt: JwtService, private auth: AuthService, private httpService: HttpService, private store: Store<{ userConnected: ConnectedUser }>) { 
+  solde$: Observable<number>
+  constructor(private storage: Storage, private toast: ToastService, private jwt: JwtService, private auth: AuthService, private httpService: HttpService, private store: Store<{ userConnected: ConnectedUser, solde: number }>) { 
     this.userConn$ = store.select('userConnected');
+    this.solde$ = store.select('solde');
     
   }
 
   isAdmin : boolean;
-  solde = 0.0
   date = new Date
   accountId = null
 
@@ -32,7 +34,7 @@ export class MainPage implements OnInit {
       (user: ConnectedUser) =>{
         this.httpService.get(`/admin/comptes/${user.accountId}`).subscribe(
           (compte: any) =>{
-            this.solde = compte.solde
+            this.store.dispatch(soldeUpdate({solde: compte.solde}))
             this.accountId = compte.id
           }
         )
@@ -51,14 +53,6 @@ export class MainPage implements OnInit {
   soldeHidden: boolean = false
   hideSolde(){
     this.soldeHidden = !this.soldeHidden
-    if(this.accountId !== null){
-      this.httpService.get(`/admin/comptes/${this.accountId}`).subscribe(
-        (compte: any) =>{
-          this.solde = compte.solde
-          this.date = new Date
-        }
-      )
-    }
   }
 
   logout(){
